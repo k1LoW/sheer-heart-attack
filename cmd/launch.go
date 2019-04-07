@@ -24,6 +24,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strings"
 
 	"github.com/spf13/cobra"
 )
@@ -49,7 +50,6 @@ var launchCmd = &cobra.Command{
 		trackCommand = append(trackCommand, optionPID(pid, nonInteractive)...)
 		// threshold
 		trackCommand = append(trackCommand, optionThreshold(threshold, nonInteractive)...)
-
 		// interval
 		trackCommand = append(trackCommand, optionInterval(interval, nonInteractive)...)
 		// attempts
@@ -64,6 +64,8 @@ var launchCmd = &cobra.Command{
 		c := exec.Command(trackCommand[0], trackCommand[1:]...)
 		c.Env = envs
 		c.Start()
+
+		fmt.Printf("Launched: %s\n", strings.Join(trackCommand, " "))
 	},
 }
 
