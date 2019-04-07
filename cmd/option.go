@@ -44,6 +44,9 @@ func optionPID(pid int32, nonInteractive bool) option {
 
 // optionThreshold ...
 func optionThreshold(threshold string, nonInteractive bool) option {
+	if nonInteractive {
+		return []string{"--threshold", threshold}
+	}
 	fmt.Printf("%s ... %s\n", color.Cyan("--threshold", color.B), "Threshold conditions.")
 	fmt.Println("")
 	fmt.Printf("%s\n", color.White("Available Metrics", color.B))
@@ -65,25 +68,39 @@ func optionThreshold(threshold string, nonInteractive bool) option {
 
 // optionInterval ...
 func optionInterval(interval int, nonInteractive bool) option {
+	intervalStr := strconv.Itoa(interval)
+	if nonInteractive {
+		return []string{"--interval", intervalStr}
+	}
 	fmt.Printf("%s ... %s\n", color.Cyan("--interval", color.B), "Interval of checking if the threshold exceeded (seconds).")
 	fmt.Println("")
-	intervalStr := prompter.Prompt("Enter interval", strconv.Itoa(interval))
+	intervalStr = prompter.Prompt("Enter interval", intervalStr)
 	fmt.Println("")
 	return []string{"--interval", intervalStr}
 }
 
 // optionAttempts ...
 func optionAttempts(attempts int, nonInteractive bool) option {
+	attemptsStr := strconv.Itoa(attempts)
+	if nonInteractive {
+		return []string{"--attempts", attemptsStr}
+	}
 	fmt.Printf("%s ... %s\n", color.Cyan("--attempts", color.B), "Maximum number of attempts continuously exceeding the threshold.")
 	fmt.Println("")
-	attemptsStr := prompter.Prompt("Enter attempts", strconv.Itoa(attempts))
+	attemptsStr = prompter.Prompt("Enter attempts", attemptsStr)
 	fmt.Println("")
 	return []string{"--attempts", attemptsStr}
 }
 
 // optionCommand ...
 func optionCommand(command string, nonInteractive bool) option {
+	if nonInteractive {
+		return []string{"--command", command}
+	}
 	fmt.Printf("%s ... %s\n", color.Cyan("--command", color.B), "Command to execute when the maximum number of attempts is exceeded.")
+	fmt.Println("")
+	fmt.Printf("%s\n", color.White("Additional Environment Variables", color.B))
+	fmt.Printf("  %s: %s\n", color.White("$PID", color.B), "PID of the process.")
 	fmt.Println("")
 	command = prompter.Prompt("Enter command", command)
 	fmt.Println("")
@@ -92,18 +109,26 @@ func optionCommand(command string, nonInteractive bool) option {
 
 // optionCount ...
 func optionCount(count int, nonInteractive bool) option {
+	countStr := strconv.Itoa(count)
+	if nonInteractive {
+		return []string{"--count", countStr}
+	}
 	fmt.Printf("%s ... %s\n", color.Cyan("--count", color.B), "Maximum number of command executions. If count < 1, track and execute until timeout.")
 	fmt.Println("")
-	countStr := prompter.Prompt("Enter count", strconv.Itoa(count))
+	countStr = prompter.Prompt("Enter count", strconv.Itoa(count))
 	fmt.Println("")
 	return []string{"--count", countStr}
 }
 
 // optionTimeout ...
 func optionTimeout(timeout int, nonInteractive bool) option {
+	timeoutStr := strconv.Itoa(timeout)
+	if nonInteractive {
+		return []string{"--timeout", timeoutStr}
+	}
 	fmt.Printf("%s ... %s\n", color.Cyan("--tineout", color.B), "Timeout of tracking (seconds).")
 	fmt.Println("")
-	timeoutStr := prompter.Prompt("Enter timeout", strconv.Itoa(timeout))
+	timeoutStr = prompter.Prompt("Enter timeout", timeoutStr)
 	fmt.Println("")
 	return []string{"--timeout", timeoutStr}
 }

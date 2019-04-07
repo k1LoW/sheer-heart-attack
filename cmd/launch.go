@@ -47,7 +47,9 @@ var launchCmd = &cobra.Command{
 		trackCommand := []string{exe, "track"}
 
 		// pid
-		trackCommand = append(trackCommand, optionPID(pid, nonInteractive)...)
+		optPID := optionPID(pid, nonInteractive)
+		pidStr := optPID[1]
+		trackCommand = append(trackCommand, optPID...)
 		// threshold
 		trackCommand = append(trackCommand, optionThreshold(threshold, nonInteractive)...)
 		// interval
@@ -62,6 +64,7 @@ var launchCmd = &cobra.Command{
 		trackCommand = append(trackCommand, optionTimeout(timeout, nonInteractive)...)
 
 		c := exec.Command(trackCommand[0], trackCommand[1:]...)
+		envs = append(envs, "PID=%s", pidStr)
 		c.Env = envs
 		c.Start()
 
