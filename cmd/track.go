@@ -31,9 +31,12 @@ import (
 	"time"
 
 	"github.com/antonmedv/expr"
+	"github.com/mattn/go-isatty"
 	"github.com/shirou/gopsutil/process"
 	"github.com/spf13/cobra"
 )
+
+var force bool
 
 // trackCmd represents the track command
 var trackCmd = &cobra.Command{
@@ -47,6 +50,10 @@ var trackCmd = &cobra.Command{
 		return nil
 	},
 	Run: func(cmd *cobra.Command, args []string) {
+		if isatty.IsTerminal(os.Stdout.Fd()) && !force {
+			_, _ = fmt.Fprintf(os.Stderr, "%s\n", "Please use sheer-herat-attack lanch")
+			os.Exit(1)
+		}
 		ctx, cancel := context.WithCancel(context.Background())
 		timer := time.NewTimer(time.Duration(timeout) * time.Second)
 		ticker := time.NewTicker(time.Duration(interval) * time.Second)
@@ -120,6 +127,7 @@ func init() {
 	trackCmd.Flags().StringVarP(&command, "command", "", "", "Command to execute when the maximum number of attempts is exceeded")
 	trackCmd.Flags().IntVarP(&count, "count", "", 1, "Maximum number of command executions. If count < 1, track and execute until timeout")
 	trackCmd.Flags().IntVarP(&timeout, "timeout", "", 60*60*24, "Timeout of tracking (seconds)")
+	trackCmd.Flags().BoolVarP(&force, "force", "", false, "Force execute 'track' command")
 }
 
 func newStat(pid int32) (map[string]interface{}, error) {
