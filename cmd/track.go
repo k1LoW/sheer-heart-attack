@@ -51,7 +51,7 @@ var trackCmd = &cobra.Command{
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		if isatty.IsTerminal(os.Stdout.Fd()) && !force {
-			_, _ = fmt.Fprintf(os.Stderr, "%s\n", "Please use sheer-herat-attack lanch")
+			_, _ = fmt.Fprintf(os.Stderr, "%s\n", "can not execute `track` directly. execute via `lanch`, or use `--force` option")
 			os.Exit(1)
 		}
 		ctx, cancel := context.WithCancel(context.Background())
