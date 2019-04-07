@@ -28,9 +28,13 @@ import (
 )
 
 var (
-	command  string
-	interval int
-	timeout  int
+	pid       int32
+	threshold string
+	attempts  int
+	command   string
+	interval  int
+	count     int
+	timeout   int
 )
 
 // rootCmd represents the base command when called without any subcommands
