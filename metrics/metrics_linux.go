@@ -3,6 +3,7 @@ package metrics
 
 import (
 	"github.com/shirou/gopsutil/cpu"
+	"github.com/shirou/gopsutil/load"
 	"github.com/shirou/gopsutil/mem"
 	"github.com/shirou/gopsutil/process"
 )
@@ -57,7 +58,12 @@ func Get(pid int32) (map[string]interface{}, error) {
 		return map[string]interface{}{}, err
 	}
 
-	stat := map[string]interface{}{
+	l, err := load.Avg()
+	if err != nil {
+		return map[string]interface{}{}, err
+	}
+
+	m := map[string]interface{}{
 		"cpu":         cpuPercent,
 		"mem":         memPercent,
 		"rss":         memInfo.RSS,
@@ -68,6 +74,9 @@ func Get(pid int32) (map[string]interface{}, error) {
 		"host_cpu":    hostCpuPercent[0],
 		"host_mem":    vm.UsedPercent,
 		"host_swap":   sw.Used,
+		"load1":       l.Load1,
+		"load5":       l.Load5,
+		"load15":      l.Load15,
 	}
-	return stat, nil
+	return m, nil
 }
