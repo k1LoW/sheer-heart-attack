@@ -31,8 +31,8 @@ import (
 	"time"
 
 	"github.com/antonmedv/expr"
+	"github.com/k1LoW/sheer-heart-attack/metrics"
 	"github.com/mattn/go-isatty"
-	"github.com/shirou/gopsutil/process"
 	"github.com/spf13/cobra"
 )
 
@@ -70,7 +70,7 @@ var trackCmd = &cobra.Command{
 				cancel()
 				break L
 			case <-ticker.C:
-				stat, err := newStat(pid)
+				stat, err := metrics.Get(pid)
 				if err != nil {
 					_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
 					break L
@@ -127,44 +127,7 @@ func init() {
 	trackCmd.Flags().StringVarP(&command, "command", "", "", "Command to execute when the maximum number of attempts is exceeded")
 	trackCmd.Flags().IntVarP(&count, "count", "", 1, "Maximum number of command executions. If count < 1, track and execute until timeout")
 	trackCmd.Flags().IntVarP(&timeout, "timeout", "", 60*60*24, "Timeout of tracking (seconds)")
-	trackCmd.Flags().BoolVarP(&force, "force", "", false, "Force execute 'track' command")
-}
-
-func newStat(pid int32) (map[string]interface{}, error) {
-	p, err := process.NewProcess(pid)
-	if err != nil {
-		return map[string]interface{}{}, err
-	}
-	cpu, err := p.CPUPercent()
-	if err != nil {
-		return map[string]interface{}{}, err
-	}
-	mem, err := p.MemoryPercent()
-	if err != nil {
-		return map[string]interface{}{}, err
-	}
-	memInfo, err := p.MemoryInfo()
-	if err != nil {
-		return map[string]interface{}{}, err
-	}
-	swap := memInfo.Swap
-
-	// memoryMaps, err := p.MemoryMaps(true)
-
-	connections, err := p.Connections()
-	if err != nil {
-		return map[string]interface{}{}, err
-	}
-
-	stat := map[string]interface{}{
-		"cpu":         cpu,
-		"mem":         mem,
-		"rss":         memInfo.RSS,
-		"vms":         memInfo.VMS,
-		"swap":        swap,
-		"connections": len(connections),
-	}
-	return stat, nil
+	trackCmd.Flags().BoolVarP(&force, "force", "", false, "Force execute 'track' command on tty")
 }
 
 func execute(ctx context.Context, command string, envs []string, timeout int) ([]byte, []byte, error) {
