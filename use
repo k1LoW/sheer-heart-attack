@@ -5,44 +5,44 @@
 #
 # Reference:
 #   https://github.com/goreleaser/get
-GOOS=linux
-EXT=tar.gz
-ARCH=amd64
+SHA_GOOS=linux
+SHA_EXT=tar.gz
+SHA_ARCH=amd64
 if test $(uname -s) = "Darwin"
 then
-  GOOS=darwin
-  EXT=zip
+  SHA_GOOS=darwin
+  SHA_EXT=zip
 fi
-ARCHIVE="/tmp/sheer-heart-attack.${EXT}"
+SHA_ARCHIVE="/tmp/sheer-heart-attack.${SHA_EXT}"
 
-RELEASES_URL="https://github.com/k1LoW/sheer-heart-attack/releases"
-test -z "$TMPDIR" && TMPDIR="$(mktemp -d)"
+SHA_RELEASES_URL="https://github.com/k1LoW/sheer-heart-attack/releases"
+test -z "$SHA_TMPDIR" && SHA_TMPDIR="$(mktemp -d)"
 
 last_version() {
-  curl -sL -o /dev/null -w %{url_effective} "$RELEASES_URL/latest" |
+  curl -sL -o /dev/null -w %{url_effective} "$SHA_RELEASES_URL/latest" |
     rev |
     cut -f1 -d'/'|
     rev
 }
 
 download() {
-  test -z "$VERSION" && VERSION="$(last_version)"
-  test -z "$VERSION" && {
+  test -z "$SHA_VERSION" && SHA_VERSION="$(last_version)"
+  test -z "$SHA_VERSION" && {
     echo "Unable to get sheer-heart-attack version." >&2
     exit 1
   }
-  rm -f "$ARCHIVE"
-  curl -s -L -o "$ARCHIVE" \
-    "${RELEASES_URL}/download/${VERSION}/sheer-heart-attack_${VERSION}_${GOOS}_${ARCH}.${EXT}"
+  rm -f "$SHA_ARCHIVE"
+  curl -s -L -o "$SHA_ARCHIVE" \
+    "${SHA_RELEASES_URL}/download/${SHA_VERSION}/SHA_${SHA_VERSION}_${SHA_GOOS}_${SHA_ARCH}.${SHA_EXT}"
 }
 
 download
-if test ${EXT} = "tar.gz"
+if test ${SHA_EXT} = "tar.gz"
 then
-  tar -xf "$ARCHIVE" -C "$TMPDIR"
-elif test ${EXT} = "zip"
+  tar -xf "$SHA_ARCHIVE" -C "$SHA_TMPDIR"
+elif test ${SHA_EXT} = "zip"
 then
-  unzip -foq -d "$TMPDIR" "$ARCHIVE"
+  unzip -qo "$SHA_ARCHIVE" -d "$TBLS_TMPDIR"
 fi
-export PATH=${TMPDIR}:$PATH
+export PATH=${SHA_TMPDIR}:$PATH
 echo -e '\e[36mYou can use `sheer-heart-attack` command in this session.\e[m'
