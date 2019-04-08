@@ -35,8 +35,8 @@ var nonInteractive bool
 // launchCmd represents the launch command
 var launchCmd = &cobra.Command{
 	Use:   "launch",
-	Short: "launch",
-	Long:  `launch`,
+	Short: "Launch 'track' command in background.",
+	Long:  `Launch 'track' command in background.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		envs := os.Environ()
 		exe, err := os.Executable()

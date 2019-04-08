@@ -41,8 +41,8 @@ var force bool
 // trackCmd represents the track command
 var trackCmd = &cobra.Command{
 	Use:   "track",
-	Short: "track",
-	Long:  `track.`,
+	Short: "Track the process metrics and execute command when the threshold is exceeded.",
+	Long:  `Track the process metrics and execute command when the threshold is exceeded.`,
 	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) > 0 {
 			return errors.New("track require no args")
