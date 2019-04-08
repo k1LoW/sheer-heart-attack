@@ -13,10 +13,9 @@ then
   SHA_GOOS=darwin
   SHA_EXT=zip
 fi
-SHA_ARCHIVE="/tmp/sheer-heart-attack.${SHA_EXT}"
-
 SHA_RELEASES_URL="https://github.com/k1LoW/sheer-heart-attack/releases"
 test -z "$SHA_TMPDIR" && SHA_TMPDIR="$(mktemp -d)"
+SHA_ARCHIVE="${SHA_TMPDIR}sheer-heart-attack.${SHA_EXT}"
 
 last_version() {
   curl -sL -o /dev/null -w %{url_effective} "$SHA_RELEASES_URL/latest" |
@@ -33,7 +32,7 @@ download() {
   }
   rm -f "$SHA_ARCHIVE"
   curl -s -L -o "$SHA_ARCHIVE" \
-    "${SHA_RELEASES_URL}/download/${SHA_VERSION}/SHA_${SHA_VERSION}_${SHA_GOOS}_${SHA_ARCH}.${SHA_EXT}"
+    "${SHA_RELEASES_URL}/download/${SHA_VERSION}/sheer-heart-attack_${SHA_VERSION}_${SHA_GOOS}_${SHA_ARCH}.${SHA_EXT}"
 }
 
 download
