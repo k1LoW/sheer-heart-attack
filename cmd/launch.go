@@ -27,6 +27,7 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/labstack/gommon/color"
 	"github.com/spf13/cobra"
 )
 
@@ -74,7 +75,7 @@ var launchCmd = &cobra.Command{
 		c.Env = envs
 		c.Start()
 
-		fmt.Printf("Launched: %s\n", strings.Join(trackCommand, " "))
+		fmt.Printf("%s %s\n", color.Magenta("Launched:", color.B), strings.Join(trackCommand, " "))
 	},
 }
 
