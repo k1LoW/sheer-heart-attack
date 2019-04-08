@@ -1,6 +1,6 @@
 # Sheer Heart Attack
 
-"Sheer Heart Attack" provides a tool that can execute any command on the process/host metrics trigger for debugging.
+"Sheer Heart Attack" is a debugging tool that can execute any command on the process/host metrics trigger.
 
 ## Quick Start
 
