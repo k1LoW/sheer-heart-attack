@@ -1,8 +1,8 @@
 # Sheer Heart Attack
 
-"Sheer Heart Attack" provides temporary tool that can execute any command on the process/host metrics trigger for debugging.
+"Sheer Heart Attack" provides a tool that can execute any command on the process/host metrics trigger for debugging.
 
-## Usage
+## Quick Start
 
 ``` console
 $ source <(curl https://raw.githubusercontent.com/k1LoW/sheer-heart-attack/master/use)
@@ -10,7 +10,7 @@ You can use `sheer-heart-attack` command in this session.
 $ sheer-heart-attack launch
 ```
 
-## Install (Not recommended)
+## Install
 
 **manually:**
 
