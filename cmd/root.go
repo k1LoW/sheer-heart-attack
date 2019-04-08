@@ -40,8 +40,8 @@ var (
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
 	Use:   "sheer-heart-attack",
-	Short: "debugging tool that can execute any command on the process/host metrics trigger",
-	Long:  `debugging tool that can execute any command on the process/host metrics trigger.`,
+	Short: "A debugging tool that can execute any command on the process/host metrics trigger",
+	Long:  `A debugging tool that can execute any command on the process/host metrics trigger.`,
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
