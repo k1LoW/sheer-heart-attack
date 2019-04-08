@@ -1,6 +1,6 @@
 # Sheer Heart Attack [![GitHub release](https://img.shields.io/github/release/k1LoW/sheer-heart-attack.svg)](https://github.com/k1LoW/sheer-heart-attack/releases)
 
-"Sheer Heart Attack" is a debugging tool that can execute any command on the process/host metrics trigger.
+`sheer-heart-attack` is a debugging tool that can execute any command on the process/host metrics trigger.
 
 ## Quick Start
 
