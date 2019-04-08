@@ -33,7 +33,7 @@ var (
 	attempts  int
 	command   string
 	interval  int
-	count     int
+	times     int
 	timeout   int
 )
 

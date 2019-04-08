@@ -64,8 +64,8 @@ var launchCmd = &cobra.Command{
 		trackCommand = append(trackCommand, optionAttempts(attempts, nonInteractive)...)
 		// command
 		trackCommand = append(trackCommand, optionCommand(command, nonInteractive)...)
-		// count
-		trackCommand = append(trackCommand, optionCount(count, nonInteractive)...)
+		// times
+		trackCommand = append(trackCommand, optionTimes(times, nonInteractive)...)
 		// timeout
 		trackCommand = append(trackCommand, optionTimeout(timeout, nonInteractive)...)
 
@@ -87,6 +87,6 @@ func init() {
 	launchCmd.Flags().IntVarP(&interval, "interval", "", 5, "Interval of checking if the threshold exceeded (seconds)")
 	launchCmd.Flags().IntVarP(&attempts, "attempts", "", 1, "Maximum number of attempts continuously exceeding the threshold")
 	launchCmd.Flags().StringVarP(&command, "command", "", "", "Command to execute when the maximum number of attempts is exceeded")
-	launchCmd.Flags().IntVarP(&count, "count", "", 1, "Maximum number of command executions. If count < 1, track and execute until timeout")
+	launchCmd.Flags().IntVarP(&times, "times", "", 1, "Maximum number of command executions. If times < 1, track and execute until timeout")
 	launchCmd.Flags().IntVarP(&timeout, "timeout", "", 60*60*24, "Timeout of tracking (seconds)")
 }

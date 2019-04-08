@@ -105,7 +105,7 @@ var trackCmd = &cobra.Command{
 						// do not break
 					}
 				}
-				if count > 0 && executed >= count {
+				if times > 0 && executed >= times {
 					fmt.Printf("%s\n", "done")
 					cancel()
 					break L
@@ -125,7 +125,7 @@ func init() {
 	trackCmd.Flags().IntVarP(&interval, "interval", "", 5, "Interval of checking if the threshold exceeded (seconds)")
 	trackCmd.Flags().IntVarP(&attempts, "attempts", "", 1, "Maximum number of attempts continuously exceeding the threshold")
 	trackCmd.Flags().StringVarP(&command, "command", "", "", "Command to execute when the maximum number of attempts is exceeded")
-	trackCmd.Flags().IntVarP(&count, "count", "", 1, "Maximum number of command executions. If count < 1, track and execute until timeout")
+	trackCmd.Flags().IntVarP(&times, "times", "", 1, "Maximum number of command executions. If times < 1, track and execute until timeout")
 	trackCmd.Flags().IntVarP(&timeout, "timeout", "", 60*60*24, "Timeout of tracking (seconds)")
 	trackCmd.Flags().BoolVarP(&force, "force", "", false, "Force execute 'track' command on tty")
 }

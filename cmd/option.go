@@ -116,17 +116,17 @@ func optionCommand(command string, nonInteractive bool) option {
 	return []string{"--command", command}
 }
 
-// optionCount ...
-func optionCount(count int, nonInteractive bool) option {
-	countStr := strconv.Itoa(count)
+// optionTimes ...
+func optionTimes(times int, nonInteractive bool) option {
+	timesStr := strconv.Itoa(times)
 	if nonInteractive {
-		return []string{"--count", countStr}
+		return []string{"--times", timesStr}
 	}
-	fmt.Printf("%s ... %s\n", color.Cyan("--count", color.B), "Maximum number of command executions. If count < 1, track and execute until timeout.")
+	fmt.Printf("%s ... %s\n", color.Cyan("--times", color.B), "Maximum number of command executions. If times < 1, track and execute until timeout.")
 	fmt.Println("")
-	countStr = prompter.Prompt("Enter count", strconv.Itoa(count))
+	timesStr = prompter.Prompt("Enter times", strconv.Itoa(times))
 	fmt.Println("")
-	return []string{"--count", countStr}
+	return []string{"--times", timesStr}
 }
 
 // optionTimeout ...
