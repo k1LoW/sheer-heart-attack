@@ -70,12 +70,12 @@ var trackCmd = &cobra.Command{
 				cancel()
 				break L
 			case <-ticker.C:
-				stat, err := metrics.Get(pid)
+				m, err := metrics.Get(pid)
 				if err != nil {
 					_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
 					break L
 				}
-				got, err := expr.Eval(fmt.Sprintf("(%s) == true", threshold), stat)
+				got, err := expr.Eval(fmt.Sprintf("(%s) == true", threshold), m)
 				if err != nil {
 					_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
 					break L

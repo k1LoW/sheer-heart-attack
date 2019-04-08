@@ -6,6 +6,7 @@ import (
 	"strconv"
 
 	"github.com/Songmu/prompter"
+	"github.com/k1LoW/sheer-heart-attack/metrics"
 	"github.com/labstack/gommon/color"
 	"github.com/shirou/gopsutil/process"
 )
@@ -43,19 +44,24 @@ func optionPID(pid int32, nonInteractive bool) option {
 }
 
 // optionThreshold ...
-func optionThreshold(threshold string, nonInteractive bool) option {
+func optionThreshold(threshold string, pid int32, nonInteractive bool) option {
 	if nonInteractive {
 		return []string{"--threshold", threshold}
+	}
+	m, err := metrics.Get(pid)
+	if err != nil {
+		_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
+		return optionThreshold(threshold, pid, nonInteractive)
 	}
 	fmt.Printf("%s ... %s\n", color.Cyan("--threshold", color.B), "Threshold conditions.")
 	fmt.Println("")
 	fmt.Printf("%s\n", color.White("Available Metrics", color.B))
-	fmt.Printf("  %s: %s\n", color.White("cpu", color.B), "The percentage of the CPU time the process uses (percent).")
-	fmt.Printf("  %s: %s\n", color.White("men", color.B), "The percentage of the total RAM the process uses (percent).")
-	fmt.Printf("  %s: %s\n", color.White("rss", color.B), "The non-swapped physical memory the process uses (bytes).")
-	fmt.Printf("  %s: %s\n", color.White("vms", color.B), "The amount of virtual memory the process uses (bytes).")
-	fmt.Printf("  %s: %s\n", color.White("swap", color.B), "The amount of memory that has been swapped out to disk the process uses (bytes).")
-	fmt.Printf("  %s: %s\n", color.White("connections", color.B), "The amount of connections(TCP, UDP or UNIX) the process uses.")
+	fmt.Printf("  %s (now:%f): %s\n", color.White("cpu", color.B), m["cpu"], "The percentage of the CPU time the process uses (percent).")
+	fmt.Printf("  %s (now:%f): %s\n", color.White("mem", color.B), m["mem"], "The percentage of the total RAM the process uses (percent).")
+	fmt.Printf("  %s (now:%d): %s\n", color.White("rss", color.B), m["rss"], "The non-swapped physical memory the process uses (bytes).")
+	fmt.Printf("  %s (now:%d): %s\n", color.White("vms", color.B), m["vms"], "The amount of virtual memory the process uses (bytes).")
+	fmt.Printf("  %s (now:%d): %s\n", color.White("swap", color.B), m["swap"], "The amount of memory that has been swapped out to disk the process uses (bytes).")
+	fmt.Printf("  %s (now:%d): %s\n", color.White("connections", color.B), m["connections"], "The amount of connections(TCP, UDP or UNIX) the process uses.")
 	fmt.Printf("%s\n", color.White("Available Comparison Operators", color.B))
 	fmt.Printf("  %s\n", "==, !=, <, >, <=, >=")
 	fmt.Printf("%s\n", color.White("Available Logical Operators", color.B))

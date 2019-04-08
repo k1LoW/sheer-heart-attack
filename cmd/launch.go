@@ -24,6 +24,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"strconv"
 	"strings"
 
 	"github.com/spf13/cobra"
@@ -51,7 +52,12 @@ var launchCmd = &cobra.Command{
 		pidStr := optPID[1]
 		trackCommand = append(trackCommand, optPID...)
 		// threshold
-		trackCommand = append(trackCommand, optionThreshold(threshold, nonInteractive)...)
+		pidInt32, err := strconv.ParseInt(pidStr, 10, 32)
+		if err != nil {
+			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
+			os.Exit(1)
+		}
+		trackCommand = append(trackCommand, optionThreshold(threshold, int32(pidInt32), nonInteractive)...)
 		// interval
 		trackCommand = append(trackCommand, optionInterval(interval, nonInteractive)...)
 		// attempts
