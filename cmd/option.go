@@ -62,6 +62,9 @@ func optionThreshold(threshold string, pid int32, nonInteractive bool) option {
 	fmt.Printf("  %s (now:%d): %s\n", color.White("vms", color.B), m["vms"], "The amount of virtual memory the process uses (bytes).")
 	fmt.Printf("  %s (now:%d): %s\n", color.White("swap", color.B), m["swap"], "The amount of memory that has been swapped out to disk the process uses (bytes).")
 	fmt.Printf("  %s (now:%d): %s\n", color.White("connections", color.B), m["connections"], "The amount of connections(TCP, UDP or UNIX) the process uses.")
+	if of, ok := m["open_files"]; ok {
+		fmt.Printf("  %s (now:%d): %s\n", color.White("open_files", color.B), of, "The amount of files and file discripters opend by the process.")
+	}
 	fmt.Printf("  %s (now:%f): %s\n", color.White("host_cpu", color.B), m["host_cpu"], "The percentage of cpu used.")
 	fmt.Printf("  %s (now:%f): %s\n", color.White("host_mem", color.B), m["host_mem"], "The percentage of RAM used.")
 	fmt.Printf("  %s (now:%d): %s\n", color.White("host_swap", color.B), m["host_swap"], "The amount of memory that has been swapped out to disk (bytes).")
