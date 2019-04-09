@@ -51,7 +51,7 @@ func optionThreshold(threshold string, pid int32, nonInteractive bool) option {
 	m, err := metrics.Get(pid)
 	if err != nil {
 		_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
-		return optionThreshold(threshold, pid, nonInteractive)
+		os.Exit(1)
 	}
 	fmt.Printf("%s ... %s\n", color.Magenta("--threshold", color.B), "Threshold conditions.")
 	fmt.Println("")
