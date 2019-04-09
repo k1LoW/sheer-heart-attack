@@ -41,7 +41,7 @@ then
   tar -xf "$SHA_ARCHIVE" -C "$SHA_TMPDIR"
 elif test ${SHA_EXT} = "zip"
 then
-  unzip -qo "$SHA_ARCHIVE" -d "$TBLS_TMPDIR"
+  unzip -qo "$SHA_ARCHIVE" -d "$SHA_TMPDIR"
 fi
 export PATH=${SHA_TMPDIR}:$PATH
 echo -e '\e[36mYou can use `sheer-heart-attack` command in this session.\e[m'
