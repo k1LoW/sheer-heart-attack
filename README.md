@@ -5,7 +5,7 @@
 ## Quick Start
 
 ``` console
-$ source <(curl https://git.io/sheer-heart-attack)
+$ source <(curl -sL https://git.io/sheer-heart-attack)
 You can use `sheer-heart-attack` command in this session.
 $ sheer-heart-attack launch
 ```
