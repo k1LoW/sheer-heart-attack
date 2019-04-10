@@ -29,4 +29,3 @@ go get github.com/k1LoW/sheer-heart-attack
 ## TODO
 
 - Slack notify when execute command.
-- Structured log.
