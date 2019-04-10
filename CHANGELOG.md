@@ -1,5 +1,9 @@
 # Changelog
 
+## [v0.2.1](https://github.com/k1LoW/sheer-heart-attack/compare/v0.2.0...v0.2.1) (2019-04-10)
+
+* Fix .goreleaser.yml (CGO_ENABLED=1 when darwin) [#6](https://github.com/k1LoW/sheer-heart-attack/pull/6) ([k1LoW](https://github.com/k1LoW))
+
 ## [v0.2.0](https://github.com/k1LoW/sheer-heart-attack/compare/v0.1.2...v0.2.0) (2019-04-10)
 
 * Structured log [#5](https://github.com/k1LoW/sheer-heart-attack/pull/5) ([k1LoW](https://github.com/k1LoW))
