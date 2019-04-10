@@ -25,15 +25,17 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"time"
 
 	"github.com/antonmedv/expr"
+	"github.com/k1LoW/sheer-heart-attack/logger"
 	"github.com/k1LoW/sheer-heart-attack/metrics"
 	"github.com/mattn/go-isatty"
 	"github.com/spf13/cobra"
+	"go.uber.org/zap"
 )
 
 var force bool
@@ -51,33 +53,39 @@ var trackCmd = &cobra.Command{
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		if isatty.IsTerminal(os.Stdout.Fd()) && !force {
-			_, _ = fmt.Fprintf(os.Stderr, "%s\n", "can not execute `track` directly. execute via `lanch`, or use `--force` option")
+			_, _ = fmt.Fprintf(os.Stderr, "%s\n", "can not execute `track` directly. execute via `launch`, or use `--force` option")
 			os.Exit(1)
 		}
 		ctx, cancel := context.WithCancel(context.Background())
 		timer := time.NewTimer(time.Duration(timeout) * time.Second)
 		ticker := time.NewTicker(time.Duration(interval) * time.Second)
 		envs := os.Environ()
-		logsDir := "sheer-heart-attack-logs"
+		logPath, err := filepath.Abs(fmt.Sprintf("sheer-heart-attack-%s.log", time.Now().Format(time.RFC3339)))
+		if err != nil {
+			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
+			os.Exit(1)
+		}
+		l := logger.NewLogger(logPath)
 		exceeded := 0
 		executed := 0
+		l.Info("", zap.String("msg", "start tracking"))
 
 	L:
 		for {
 			select {
 			case <-timer.C:
-				fmt.Printf("%s\n", "timeout")
+				l.Info("", zap.String("msg", "tracking timeout"))
 				cancel()
 				break L
 			case <-ticker.C:
 				m, err := metrics.Get(pid)
 				if err != nil {
-					_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
+					l.Error("", zap.Error(err))
 					break L
 				}
 				got, err := expr.Eval(fmt.Sprintf("(%s) == true", threshold), m)
 				if err != nil {
-					_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
+					l.Error("", zap.Error(err))
 					break L
 				}
 				if got.(bool) {
@@ -86,27 +94,24 @@ var trackCmd = &cobra.Command{
 					exceeded = 0
 				}
 				if exceeded >= attempts {
-					_ = os.MkdirAll(logsDir, 0755)
-
 					stdout, stderr, err := execute(ctx, command, envs, interval)
 					executed++
 					exceeded = 0
-					now := time.Now()
-					if len(stdout) > 0 {
-						filename := fmt.Sprintf("%s/stdout-%s.log", logsDir, now.Format("20060102T150405-0700"))
-						ioutil.WriteFile(filename, stdout, 0644)
+					fields := []zap.Field{
+						zap.String("msg", "execute command"),
+						zap.ByteString("stdout", stdout),
+						zap.ByteString("stderr", stderr),
 					}
-					if len(stderr) > 0 {
-						filename := fmt.Sprintf("%s/srderr-%s.log", logsDir, now.Format("20060102T150405-0700"))
-						ioutil.WriteFile(filename, stdout, 0644)
+					for k, v := range m {
+						fields = append(fields, zap.Any(k, v))
 					}
+					l.Info("", fields...)
 					if err != nil {
-						_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
+						l.Error("", zap.Error(err))
 						// do not break
 					}
 				}
 				if times > 0 && executed >= times {
-					fmt.Printf("%s\n", "done")
 					cancel()
 					break L
 				}
@@ -115,6 +120,8 @@ var trackCmd = &cobra.Command{
 				break L
 			}
 		}
+
+		l.Info("", zap.String("msg", "tracking ended"))
 	},
 }
 
