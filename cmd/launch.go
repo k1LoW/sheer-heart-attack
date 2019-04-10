@@ -49,7 +49,11 @@ var launchCmd = &cobra.Command{
 		trackCommand := []string{exe, "track"}
 
 		// pid
-		optPID := optionPID(pid, nonInteractive)
+		optPID, err := optionPID(pid, nonInteractive)
+		if err != nil {
+			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
+			os.Exit(1)
+		}
 		pidStr := optPID[1]
 		trackCommand = append(trackCommand, optPID...)
 		// threshold
@@ -58,17 +62,47 @@ var launchCmd = &cobra.Command{
 			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
 			os.Exit(1)
 		}
-		trackCommand = append(trackCommand, optionThreshold(threshold, int32(pidInt32), nonInteractive)...)
+		optThreshold, err := optionThreshold(threshold, int32(pidInt32), nonInteractive)
+		if err != nil {
+			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
+			os.Exit(1)
+		}
+		trackCommand = append(trackCommand, optThreshold...)
 		// interval
-		trackCommand = append(trackCommand, optionInterval(interval, nonInteractive)...)
+		optInterval, err := optionInterval(interval, nonInteractive)
+		if err != nil {
+			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
+			os.Exit(1)
+		}
+		trackCommand = append(trackCommand, optInterval...)
 		// attempts
-		trackCommand = append(trackCommand, optionAttempts(attempts, nonInteractive)...)
+		optAttempts, err := optionAttempts(attempts, nonInteractive)
+		if err != nil {
+			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
+			os.Exit(1)
+		}
+		trackCommand = append(trackCommand, optAttempts...)
 		// command
-		trackCommand = append(trackCommand, optionCommand(command, nonInteractive)...)
+		optCommand, err := optionCommand(command, nonInteractive)
+		if err != nil {
+			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
+			os.Exit(1)
+		}
+		trackCommand = append(trackCommand, optCommand...)
 		// times
-		trackCommand = append(trackCommand, optionTimes(times, nonInteractive)...)
+		optTimes, err := optionTimes(times, nonInteractive)
+		if err != nil {
+			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
+			os.Exit(1)
+		}
+		trackCommand = append(trackCommand, optTimes...)
 		// timeout
-		trackCommand = append(trackCommand, optionTimeout(timeout, nonInteractive)...)
+		optTimeout, err := optionTimeout(timeout, nonInteractive)
+		if err != nil {
+			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
+			os.Exit(1)
+		}
+		trackCommand = append(trackCommand, optTimeout...)
 
 		c := exec.Command(trackCommand[0], trackCommand[1:]...)
 		envs = append(envs, "PID=%s", pidStr)

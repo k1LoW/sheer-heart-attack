@@ -14,7 +14,7 @@ import (
 type option []string
 
 // optionPID ...
-func optionPID(pid int32, nonInteractive bool) option {
+func optionPID(pid int32, nonInteractive bool) (option, error) {
 	fmt.Printf("%s ... %s\n", color.Magenta("--pid", color.B), "PID of the process.")
 	pidStr := strconv.Itoa(int(pid))
 	if pidStr == "0" {
@@ -40,18 +40,17 @@ func optionPID(pid int32, nonInteractive bool) option {
 	fmt.Printf("Target process: %s\n", name)
 
 	fmt.Println("")
-	return []string{"--pid", pidStr}
+	return option{"--pid", pidStr}, nil
 }
 
 // optionThreshold ...
-func optionThreshold(threshold string, pid int32, nonInteractive bool) option {
+func optionThreshold(threshold string, pid int32, nonInteractive bool) (option, error) {
 	if nonInteractive {
-		return []string{"--threshold", threshold}
+		return option{"--threshold", threshold}, nil
 	}
 	m, err := metrics.Get(pid)
 	if err != nil {
-		_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
-		os.Exit(1)
+		return option{}, err
 	}
 	fmt.Printf("%s ... %s\n", color.Magenta("--threshold", color.B), "Threshold conditions.")
 	fmt.Println("")
@@ -76,39 +75,39 @@ func optionThreshold(threshold string, pid int32, nonInteractive bool) option {
 	fmt.Println("")
 	threshold = prompter.Prompt("Enter threshold", threshold)
 	fmt.Println("")
-	return []string{"--threshold", threshold}
+	return option{"--threshold", threshold}, nil
 }
 
 // optionInterval ...
-func optionInterval(interval int, nonInteractive bool) option {
+func optionInterval(interval int, nonInteractive bool) (option, error) {
 	intervalStr := strconv.Itoa(interval)
 	if nonInteractive {
-		return []string{"--interval", intervalStr}
+		return option{"--interval", intervalStr}, nil
 	}
 	fmt.Printf("%s ... %s\n", color.Magenta("--interval", color.B), "Interval of checking if the threshold exceeded (seconds).")
 	fmt.Println("")
 	intervalStr = prompter.Prompt("Enter interval", intervalStr)
 	fmt.Println("")
-	return []string{"--interval", intervalStr}
+	return option{"--interval", intervalStr}, nil
 }
 
 // optionAttempts ...
-func optionAttempts(attempts int, nonInteractive bool) option {
+func optionAttempts(attempts int, nonInteractive bool) (option, error) {
 	attemptsStr := strconv.Itoa(attempts)
 	if nonInteractive {
-		return []string{"--attempts", attemptsStr}
+		return option{"--attempts", attemptsStr}, nil
 	}
 	fmt.Printf("%s ... %s\n", color.Magenta("--attempts", color.B), "Maximum number of attempts continuously exceeding the threshold.")
 	fmt.Println("")
 	attemptsStr = prompter.Prompt("Enter attempts", attemptsStr)
 	fmt.Println("")
-	return []string{"--attempts", attemptsStr}
+	return option{"--attempts", attemptsStr}, nil
 }
 
 // optionCommand ...
-func optionCommand(command string, nonInteractive bool) option {
+func optionCommand(command string, nonInteractive bool) (option, error) {
 	if nonInteractive {
-		return []string{"--command", command}
+		return option{"--command", command}, nil
 	}
 	fmt.Printf("%s ... %s\n", color.Magenta("--command", color.B), "Command to execute when the maximum number of attempts is exceeded.")
 	fmt.Println("")
@@ -117,31 +116,31 @@ func optionCommand(command string, nonInteractive bool) option {
 	fmt.Println("")
 	command = prompter.Prompt("Enter command", command)
 	fmt.Println("")
-	return []string{"--command", command}
+	return option{"--command", command}, nil
 }
 
 // optionTimes ...
-func optionTimes(times int, nonInteractive bool) option {
+func optionTimes(times int, nonInteractive bool) (option, error) {
 	timesStr := strconv.Itoa(times)
 	if nonInteractive {
-		return []string{"--times", timesStr}
+		return option{"--times", timesStr}, nil
 	}
 	fmt.Printf("%s ... %s\n", color.Magenta("--times", color.B), "Maximum number of command executions. If times < 1, track and execute until timeout.")
 	fmt.Println("")
 	timesStr = prompter.Prompt("Enter times", strconv.Itoa(times))
 	fmt.Println("")
-	return []string{"--times", timesStr}
+	return option{"--times", timesStr}, nil
 }
 
 // optionTimeout ...
-func optionTimeout(timeout int, nonInteractive bool) option {
+func optionTimeout(timeout int, nonInteractive bool) (option, error) {
 	timeoutStr := strconv.Itoa(timeout)
 	if nonInteractive {
-		return []string{"--timeout", timeoutStr}
+		return option{"--timeout", timeoutStr}, nil
 	}
 	fmt.Printf("%s ... %s\n", color.Magenta("--tineout", color.B), "Timeout of tracking (seconds).")
 	fmt.Println("")
 	timeoutStr = prompter.Prompt("Enter timeout", timeoutStr)
 	fmt.Println("")
-	return []string{"--timeout", timeoutStr}
+	return option{"--timeout", timeoutStr}, nil
 }
