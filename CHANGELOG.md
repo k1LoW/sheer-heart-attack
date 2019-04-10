@@ -1,5 +1,9 @@
 # Changelog
 
+## [v0.2.0](https://github.com/k1LoW/sheer-heart-attack/compare/v0.1.2...v0.2.0) (2019-04-10)
+
+* Structured log [#5](https://github.com/k1LoW/sheer-heart-attack/pull/5) ([k1LoW](https://github.com/k1LoW))
+
 ## [v0.1.2](https://github.com/k1LoW/sheer-heart-attack/compare/v0.1.1...v0.1.2) (2019-04-09)
 
 * Fix error loop [#4](https://github.com/k1LoW/sheer-heart-attack/pull/4) ([k1LoW](https://github.com/k1LoW))
