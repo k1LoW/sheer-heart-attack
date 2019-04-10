@@ -6,10 +6,17 @@ before:
     - go mod tidy
 builds:
 - env:
+  - CGO_ENABLED=1
+  goos:
+    - darwin
+  goarch:
+    - amd64
+  ldflags:
+    - -s -w -X github.com/k1LoW/sheer-heart-attack.version={{.Version}} -X github.com/k1LoW/sheer-heart-attack.commit={{.FullCommit}} -X github.com/k1LoW/sheer-heart-attack.date={{.Date}} -X github.com/k1LoW/sheer-heart-attack/version.Version={{.Version}}
+- env:
   - CGO_ENABLED=0
   goos:
     - linux
-    - darwin
   goarch:
     - amd64
   ldflags:
