@@ -118,7 +118,7 @@ func init() {
 	launchCmd.Flags().BoolVarP(&nonInteractive, "non-interactive", "", false, "Disables all interactive prompting.")
 
 	launchCmd.Flags().Int32VarP(&pid, "pid", "", 0, "PID of the process")
-	launchCmd.Flags().StringVarP(&threshold, "threshold", "", "cpu > 10", "Threshold conditions")
+	launchCmd.Flags().StringVarP(&threshold, "threshold", "", "cpu > 5 || mem > 10", "Threshold conditions")
 	launchCmd.Flags().IntVarP(&interval, "interval", "", 5, "Interval of checking if the threshold exceeded (seconds)")
 	launchCmd.Flags().IntVarP(&attempts, "attempts", "", 1, "Maximum number of attempts continuously exceeding the threshold")
 	launchCmd.Flags().StringVarP(&command, "command", "", "", "Command to execute when the maximum number of attempts is exceeded")
