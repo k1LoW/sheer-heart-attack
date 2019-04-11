@@ -7,8 +7,14 @@
 ``` console
 # source <(curl -sL https://git.io/sheer-heart-attack)
 You can use `sheer-heart-attack` command in this session.
-# In the case of fish
-source (curl -sL https://git.io/sheer-heart-attack-fish)
+# sheer-heart-attack launch
+```
+
+### In the case of fish :fish:
+
+``` console
+# source (curl -sL https://git.io/sheer-heart-attack-fish)
+You can use `sheer-heart-attack` command in this session.
 # sheer-heart-attack launch
 ```
 
