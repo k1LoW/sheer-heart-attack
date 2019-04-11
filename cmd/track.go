@@ -128,7 +128,7 @@ var trackCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(trackCmd)
 	trackCmd.Flags().Int32VarP(&pid, "pid", "", 0, "PID of the process")
-	trackCmd.Flags().StringVarP(&threshold, "threshold", "", "cpu > 10", "Threshold conditions")
+	trackCmd.Flags().StringVarP(&threshold, "threshold", "", "cpu > 5 || mem > 10", "Threshold conditions")
 	trackCmd.Flags().IntVarP(&interval, "interval", "", 5, "Interval of checking if the threshold exceeded (seconds)")
 	trackCmd.Flags().IntVarP(&attempts, "attempts", "", 1, "Maximum number of attempts continuously exceeding the threshold")
 	trackCmd.Flags().StringVarP(&command, "command", "", "", "Command to execute when the maximum number of attempts is exceeded")
