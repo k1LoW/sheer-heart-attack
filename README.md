@@ -13,7 +13,7 @@ You can use `sheer-heart-attack` command in this session.
 ### In the case of fish :fish:
 
 ``` console
-# curl -sL https://git.io/sheer-heart-attack-fish > use-fish; and source use-fish
+# curl -sL https://git.io/sheer-heart-attack-fish | source
 You can use `sheer-heart-attack` command in this session.
 # sheer-heart-attack launch
 ```
