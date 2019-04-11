@@ -1,7 +1,7 @@
 #!/usr/bin/env fish
-# Usege:
+# Usage:
 #
-#   source <(curl https://raw.githubusercontent.com/k1LoW/sheer-heart-attack/master/use)
+#   source (curl -sL https://git.io/sheer-heart-attack-fish)
 #
 # Reference:
 #   https://github.com/goreleaser/get
@@ -14,7 +14,7 @@ if test (uname -s) = "Darwin"
 end
 
 set SHA_RELEASES_URL "https://github.com/k1LoW/sheer-heart-attack/releases"
-test -z "$SHA_TMPDIR" && set SHA_TMPDIR (mktemp -d)
+test -z "$SHA_TMPDIR"; and set SHA_TMPDIR (mktemp -d)
 set SHA_ARCHIVE ""$SHA_TMPDIR"sheer-heart-attack."$SHA_EXT""
 
 function last_version
@@ -25,8 +25,8 @@ function last_version
 end
 
 function download
-  test -z "$SHA_VERSION" && set SHA_VERSION (last_version)
-  test -z "$SHA_VERSION" && {
+  test -z "$SHA_VERSION"; and set SHA_VERSION (last_version)
+  test -z "$SHA_VERSION"; and {
     echo "Unable to get sheer-heart-attack version." >&2
     exit 1
   }
