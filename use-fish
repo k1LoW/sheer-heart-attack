@@ -1,0 +1,47 @@
+#!/usr/bin/env fish
+# Usage:
+#
+#   source (curl -sL https://git.io/sheer-heart-attack-fish)
+#
+# Reference:
+#   https://github.com/goreleaser/get
+set SHA_GOOS linux
+set SHA_EXT tar.gz
+set SHA_ARCH amd64
+if test (uname -s) = "Darwin"
+  set SHA_GOOS darwin
+  set SHA_EXT zip
+end
+
+set SHA_RELEASES_URL "https://github.com/k1LoW/sheer-heart-attack/releases"
+test -z "$SHA_TMPDIR"; and set SHA_TMPDIR (mktemp -d)
+set SHA_ARCHIVE ""$SHA_TMPDIR"sheer-heart-attack."$SHA_EXT""
+
+function last_version
+  curl -sL -o /dev/null -w '%{url_effective}' ""$SHA_RELEASES_URL"/latest" |
+    rev |
+    cut -f1 -d'/'|
+    rev
+end
+
+function download
+  test -z "$SHA_VERSION"; and set SHA_VERSION (last_version)
+  test -z "$SHA_VERSION"; and {
+    echo "Unable to get sheer-heart-attack version." >&2
+    exit 1
+  }
+  rm -f "$SHA_ARCHIVE"
+  curl -s -L -o "$SHA_ARCHIVE" \
+    ""$SHA_RELEASES_URL"/download/"$SHA_VERSION"/sheer-heart-attack_"$SHA_VERSION"_"$SHA_GOOS"_"$SHA_ARCH"."$SHA_EXT""
+end
+
+
+download
+if test $SHA_EXT = 'tar.gz'
+  tar -xf "$SHA_ARCHIVE" -C "$SHA_TMPDIR"
+else if test $SHA_EXT = 'zip'
+  unzip -qo "$SHA_ARCHIVE" -d "$SHA_TMPDIR"
+end
+
+set -x PATH $PATH:"$SHA_TMPDIR"
+echo -e '\e[36mYou can use `sheer-heart-attack` command in this session.\e[m'
