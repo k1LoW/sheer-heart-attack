@@ -2,20 +2,20 @@
 
 `sheer-heart-attack` is a debugging tool that can execute any command on the process/host metrics trigger.
 
-## Quick Start
+## Quick Start (Recommended)
 
 ``` console
-# source <(curl -sL https://git.io/sheer-heart-attack)
+root@kilr.q:~# source <(curl -sL https://git.io/sheer-heart-attack)
 You can use `sheer-heart-attack` command in this session.
-# sheer-heart-attack launch
+root@kilr.q:~# sheer-heart-attack launch
 ```
 
 ### In the case of fish :fish:
 
 ``` console
-# curl -sL https://git.io/sheer-heart-attack-fish | source
+root@kilr.q:~# curl -sL https://git.io/sheer-heart-attack-fish | source
 You can use `sheer-heart-attack` command in this session.
-# sheer-heart-attack launch
+root@kilr.q:~# sheer-heart-attack launch
 ```
 
 ## Install

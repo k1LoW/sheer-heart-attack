@@ -35,6 +35,7 @@ import (
 	"github.com/k1LoW/sheer-heart-attack/metrics"
 	"github.com/mattn/go-isatty"
 	slack "github.com/monochromegane/slack-incoming-webhooks"
+	"github.com/shirou/gopsutil/process"
 	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
@@ -42,10 +43,10 @@ import (
 )
 
 const (
-	startMessage   = "tracking start"
-	timeoutMessage = "tracking timeout"
-	executeMessage = "execute command"
-	endMessage     = "tracking ended"
+	startMessage   = "Tracking start"
+	timeoutMessage = "Tracking timeout"
+	executeMessage = "Execute command"
+	endMessage     = "Tracking ended"
 )
 
 var force bool
@@ -81,9 +82,19 @@ var trackCmd = &cobra.Command{
 			os.Exit(1)
 		}
 		l := logger.NewLogger(logPath)
+		p, err := process.NewProcess(pid)
+		if err != nil {
+			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
+			os.Exit(1)
+		}
+		name, err := p.Name()
+		if err != nil {
+			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
+			os.Exit(1)
+		}
 
 		opts := []trackOption{
-			{"pid", pid},
+			{"pid", fmt.Sprintf("%d (%s)", pid, name)},
 			{"threshold", threshold},
 			{"interval", interval},
 			{"attempts", attempts},
@@ -196,12 +207,14 @@ func notifySlack(webhookURL string, slackChannel string, opts []trackOption) fun
 	return func(e zapcore.Entry) error {
 		name := "Sheer Heart Attack"
 		emoji := ":bomb:"
-		color := "#B75C9D"
+		color := "#DBA6CC"
 		prefix := ""
 		switch e.Message {
 		case executeMessage:
 			prefix = ":boom:"
 			color = "#B61972"
+		case timeoutMessage:
+			prefix = ":hourglass:"
 		}
 		payload := slack.Payload{
 			Channel:   slackChannel,
