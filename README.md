@@ -2,7 +2,9 @@
 
 `sheer-heart-attack` is a debugging tool that can execute any command on the process/host metrics trigger.
 
-## Quick Start (Recommended)
+## Quick Start
+
+> This is the recommended usage.
 
 ``` console
 root@kilr.q:~# source <(curl -sL https://git.io/sheer-heart-attack)
