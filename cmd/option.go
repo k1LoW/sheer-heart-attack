@@ -1,6 +1,7 @@
 package cmd
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"strconv"
@@ -15,11 +16,14 @@ type option []string
 
 // optionPID ...
 func optionPID(pid int32, nonInteractive bool) (option, error) {
-	fmt.Printf("%s ... %s\n", color.Magenta("--pid", color.B), "PID of the process.")
 	pidStr := strconv.Itoa(int(pid))
 	if pidStr == "0" {
 		pidStr = ""
 	}
+	if nonInteractive {
+		return option{"--pid", pidStr}, nil
+	}
+	fmt.Printf("%s ... %s\n", color.Magenta("--pid", color.B), "PID of the process.")
 	fmt.Println("")
 	pidStr = prompter.Prompt("Enter pid", pidStr)
 	pidInt32, err := strconv.ParseInt(pidStr, 10, 32)
@@ -134,4 +138,54 @@ func optionTimeout(timeout int, nonInteractive bool) (option, error) {
 	timeoutStr = prompter.Prompt("Enter timeout", timeoutStr)
 	fmt.Println("")
 	return option{"--timeout", timeoutStr}, nil
+}
+
+// optionSlackChannel ...
+func optionSlackChannel(slackChannel string, nonInteractive bool) (option, error) {
+	if nonInteractive {
+		if slackChannel == "" {
+			return option{}, nil
+		} else {
+			return option{"--slack-channel", slackChannel}, nil
+		}
+	}
+	fmt.Printf("%s ... %s\n", color.Magenta("--slack-channel", color.B), "Slack channel to notify.")
+	fmt.Println("")
+	url, urlErr := GetEnvSlackIncommingWebhook()
+	if urlErr == nil {
+		fmt.Printf("%s: %s\n", color.Magenta("Slack Incomming Webhook URL", color.B), url)
+		fmt.Println("")
+	}
+	yn := prompter.YN("Do you want to notify slack channel?", true)
+	if !yn {
+		fmt.Println("")
+		return option{}, nil
+	}
+	if urlErr != nil {
+		_, _ = fmt.Fprintf(os.Stderr, "%s\n", urlErr)
+		url = prompter.Prompt("Enter slack incoming webhook URL", "")
+		if url == "" {
+			_, _ = fmt.Fprintf(os.Stderr, "%s\n", errors.New("Invalid URL"))
+			return optionSlackChannel(slackChannel, nonInteractive)
+		}
+		os.Setenv("SLACK_INCOMMING_WEBHOOK_URL", url)
+	}
+	slackChannel = prompter.Prompt("Enter slack channel", slackChannel)
+	fmt.Println("")
+	return option{"--slack-channel", slackChannel}, nil
+}
+
+// GetEnvSlackIncommingWebhook return slack incomming webhook URL via os.Envirion
+func GetEnvSlackIncommingWebhook() (string, error) {
+	envKeys := []string{
+		"SLACK_INCOMMING_WEBHOOK_URL",
+		"SLACK_WEBHOOK_URL",
+		"SLACK_URL",
+	}
+	for _, key := range envKeys {
+		if url := os.Getenv(key); url != "" {
+			return url, nil
+		}
+	}
+	return "", errors.New(fmt.Sprintf("Slack incomming webhook url environment variables are not found %s", envKeys))
 }

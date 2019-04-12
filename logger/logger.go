@@ -21,6 +21,7 @@ func NewLogger(logPath string) *zap.Logger {
 		EncoderConfig: zapcore.EncoderConfig{
 			TimeKey:        "ts",
 			LevelKey:       "level",
+			MessageKey:     "msg",
 			EncodeLevel:    zapcore.LowercaseLevelEncoder,
 			EncodeTime:     TimeEncoder,
 			EncodeDuration: zapcore.StringDurationEncoder,

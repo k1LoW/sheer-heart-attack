@@ -34,11 +34,26 @@ import (
 	"github.com/k1LoW/sheer-heart-attack/logger"
 	"github.com/k1LoW/sheer-heart-attack/metrics"
 	"github.com/mattn/go-isatty"
+	slack "github.com/monochromegane/slack-incoming-webhooks"
+	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
+	"go.uber.org/zap/zapcore"
+)
+
+const (
+	startMessage   = "tracking start"
+	timeoutMessage = "tracking timeout"
+	executeMessage = "execute command"
+	endMessage     = "tracking ended"
 )
 
 var force bool
+
+type trackOption struct {
+	key   string
+	value interface{}
+}
 
 // trackCmd represents the track command
 var trackCmd = &cobra.Command{
@@ -66,26 +81,45 @@ var trackCmd = &cobra.Command{
 			os.Exit(1)
 		}
 		l := logger.NewLogger(logPath)
+
+		opts := []trackOption{
+			{"pid", pid},
+			{"threshold", threshold},
+			{"interval", interval},
+			{"attempts", attempts},
+			{"times", timeout},
+			{"slack-channel", slackChannel},
+			{"command", command},
+		}
+
+		if slackChannel != "" {
+			webhookURL, err := GetEnvSlackIncommingWebhook()
+			if err != nil {
+				_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
+				os.Exit(1)
+			}
+			l = l.WithOptions(zap.Hooks(notifySlack(webhookURL, slackChannel, opts)))
+		}
 		exceeded := 0
 		executed := 0
-		l.Info("", zap.String("msg", "start tracking"))
+		l.Info(startMessage)
 
 	L:
 		for {
 			select {
 			case <-timer.C:
-				l.Info("", zap.String("msg", "tracking timeout"))
+				l.Info(timeoutMessage)
 				cancel()
 				break L
 			case <-ticker.C:
 				m, err := metrics.Get(pid)
 				if err != nil {
-					l.Error("", zap.Error(err))
+					l.Error("error", zap.Error(err))
 					break L
 				}
 				got, err := expr.Eval(fmt.Sprintf("(%s) == true", threshold), m)
 				if err != nil {
-					l.Error("", zap.Error(err))
+					l.Error("error", zap.Error(err))
 					break L
 				}
 				if got.(bool) {
@@ -98,16 +132,15 @@ var trackCmd = &cobra.Command{
 					executed++
 					exceeded = 0
 					fields := []zap.Field{
-						zap.String("msg", "execute command"),
 						zap.ByteString("stdout", stdout),
 						zap.ByteString("stderr", stderr),
 					}
 					for k, v := range m {
 						fields = append(fields, zap.Any(k, v))
 					}
-					l.Info("", fields...)
+					l.Info(executeMessage, fields...)
 					if err != nil {
-						l.Error("", zap.Error(err))
+						l.Error("error", zap.Error(err))
 						// do not break
 					}
 				}
@@ -120,8 +153,7 @@ var trackCmd = &cobra.Command{
 				break L
 			}
 		}
-
-		l.Info("", zap.String("msg", "tracking ended"))
+		l.Info(endMessage)
 	},
 }
 
@@ -134,6 +166,7 @@ func init() {
 	trackCmd.Flags().StringVarP(&command, "command", "", "", "Command to execute when the maximum number of attempts is exceeded")
 	trackCmd.Flags().IntVarP(&times, "times", "", 1, "Maximum number of command executions. If times < 1, track and execute until timeout")
 	trackCmd.Flags().IntVarP(&timeout, "timeout", "", 60*60*24, "Timeout of tracking (seconds)")
+	trackCmd.Flags().StringVarP(&slackChannel, "slack-channel", "", "", "Slack channel to notify")
 	trackCmd.Flags().BoolVarP(&force, "force", "", false, "Force execute 'track' command on tty")
 }
 
@@ -153,4 +186,52 @@ func execute(ctx context.Context, command string, envs []string, timeout int) ([
 		return stdout.Bytes(), stderr.Bytes(), err
 	}
 	return stdout.Bytes(), stderr.Bytes(), nil
+}
+
+func notifySlack(webhookURL string, slackChannel string, opts []trackOption) func(zapcore.Entry) error {
+	return func(e zapcore.Entry) error {
+		name := "Sheer Heart Attack"
+		emoji := ":bomb:"
+		color := "#B75C9D"
+		prefix := ""
+		switch e.Message {
+		case executeMessage:
+			prefix = ":boom:"
+			color = "#B61972"
+		}
+		payload := slack.Payload{
+			Channel:   slackChannel,
+			IconEmoji: emoji,
+			Username:  name,
+		}
+		attachment := slack.Attachment{
+			Title:     fmt.Sprintf("%s %s", prefix, e.Message),
+			Fallback:  e.Message,
+			Color:     color,
+			Footer:    name,
+			Timestamp: time.Now().Unix(),
+		}
+		for _, o := range opts {
+			if o.key == "command" {
+				attachment.AddField(&slack.Field{
+					Title: fmt.Sprintf("--%s", o.key),
+					Value: cast.ToString(o.value),
+					Short: false,
+				})
+			} else if o.key == "slack-channel" {
+				continue
+			} else {
+				attachment.AddField(&slack.Field{
+					Title: fmt.Sprintf("--%s", o.key),
+					Value: cast.ToString(o.value),
+					Short: true,
+				})
+			}
+		}
+		payload.AddAttachment(&attachment)
+		slack.Client{
+			WebhookURL: webhookURL,
+		}.Post(&payload)
+		return nil
+	}
 }
