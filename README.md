@@ -9,17 +9,17 @@
 > This is the recommended usage.
 
 ``` console
-root@kilr.q:~# source <(curl -sL https://git.io/sheer-heart-attack)
+root@kilr_q:~# source <(curl -sL https://git.io/sheer-heart-attack)
 You can use `sheer-heart-attack` command in this session.
-root@kilr.q:~# sheer-heart-attack launch
+root@kilr_q:~# sheer-heart-attack launch
 ```
 
 ### In the case of fish :fish:
 
 ``` console
-root@kilr.q:~# curl -sL https://git.io/sheer-heart-attack-fish | source
+root@kilr_q:~# curl -sL https://git.io/sheer-heart-attack-fish | source
 You can use `sheer-heart-attack` command in this session.
-root@kilr.q:~# sheer-heart-attack launch
+root@kilr_q:~# sheer-heart-attack launch
 ```
 
 ## Install
