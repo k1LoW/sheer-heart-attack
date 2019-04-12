@@ -1,5 +1,11 @@
 # Changelog
 
+## [v0.4.0](https://github.com/k1LoW/sheer-heart-attack/compare/v0.3.0...v0.4.0) (2019-04-12)
+
+* Add track command options to log [#10](https://github.com/k1LoW/sheer-heart-attack/pull/10) ([k1LoW](https://github.com/k1LoW))
+* Add `--slack-channel` for Slack notification [#9](https://github.com/k1LoW/sheer-heart-attack/pull/9) ([k1LoW](https://github.com/k1LoW))
+* Support fish [#8](https://github.com/k1LoW/sheer-heart-attack/pull/8) ([sonod](https://github.com/sonod))
+
 ## [v0.3.0](https://github.com/k1LoW/sheer-heart-attack/compare/v0.2.1...v0.3.0) (2019-04-11)
 
 * Add /proc/stat metrics [#7](https://github.com/k1LoW/sheer-heart-attack/pull/7) ([k1LoW](https://github.com/k1LoW))
