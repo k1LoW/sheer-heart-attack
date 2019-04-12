@@ -2,6 +2,8 @@
 
 `sheer-heart-attack` is a debugging tool that can execute any command on the process/host metrics trigger.
 
+![screencast](screencast.svg)
+
 ## Quick Start
 
 > This is the recommended usage.
