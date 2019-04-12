@@ -100,9 +100,13 @@ var trackCmd = &cobra.Command{
 			}
 			l = l.WithOptions(zap.Hooks(notifySlack(webhookURL, slackChannel, opts)))
 		}
+		fields := []zap.Field{}
+		for _, o := range opts {
+			fields = append(fields, zap.Any(o.key, o.value))
+		}
 		exceeded := 0
 		executed := 0
-		l.Info(startMessage)
+		l.Info(startMessage, fields...)
 
 	L:
 		for {
