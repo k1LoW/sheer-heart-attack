@@ -33,7 +33,3 @@ go get github.com/k1LoW/sheer-heart-attack
 ## Alternatives
 
 - [ProcDump for Linux](https://github.com/Microsoft/ProcDump-for-Linux) - A Linux version of the ProcDump Sysinternals tool
-
-## TODO
-
-- Slack notify when execute command.
