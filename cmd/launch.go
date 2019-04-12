@@ -39,7 +39,6 @@ var launchCmd = &cobra.Command{
 	Short: "Launch 'track' command in background.",
 	Long:  `Launch 'track' command in background.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		envs := os.Environ()
 		exe, err := os.Executable()
 		if err != nil {
 			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
@@ -103,7 +102,15 @@ var launchCmd = &cobra.Command{
 			os.Exit(1)
 		}
 		trackCommand = append(trackCommand, optTimeout...)
+		// slack-channel
+		optSlackChannel, err := optionSlackChannel(slackChannel, nonInteractive)
+		if err != nil {
+			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
+			os.Exit(1)
+		}
+		trackCommand = append(trackCommand, optSlackChannel...)
 
+		envs := os.Environ()
 		c := exec.Command(trackCommand[0], trackCommand[1:]...)
 		envs = append(envs, "PID=%s", pidStr)
 		c.Env = envs
@@ -124,4 +131,5 @@ func init() {
 	launchCmd.Flags().StringVarP(&command, "command", "", "", "Command to execute when the maximum number of attempts is exceeded")
 	launchCmd.Flags().IntVarP(&times, "times", "", 1, "Maximum number of command executions. If times < 1, track and execute until timeout")
 	launchCmd.Flags().IntVarP(&timeout, "timeout", "", 60*60*24, "Timeout of tracking (seconds)")
+	launchCmd.Flags().StringVarP(&slackChannel, "slack-channel", "", "", "Slack channel to notify")
 }

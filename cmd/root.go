@@ -28,13 +28,14 @@ import (
 )
 
 var (
-	pid       int32
-	threshold string
-	attempts  int
-	command   string
-	interval  int
-	times     int
-	timeout   int
+	pid          int32
+	threshold    string
+	attempts     int
+	command      string
+	interval     int
+	times        int
+	timeout      int
+	slackChannel string
 )
 
 // rootCmd represents the base command when called without any subcommands
