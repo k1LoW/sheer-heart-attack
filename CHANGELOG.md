@@ -1,5 +1,10 @@
 # Changelog
 
+## [v1.0.0](https://github.com/k1LoW/sheer-heart-attack/compare/v0.4.0...v1.0.0) (2019-04-13)
+
+* Add slack mention `@here` [#12](https://github.com/k1LoW/sheer-heart-attack/pull/12) ([k1LoW](https://github.com/k1LoW))
+* Add hostname [#11](https://github.com/k1LoW/sheer-heart-attack/pull/11) ([k1LoW](https://github.com/k1LoW))
+
 ## [v0.4.0](https://github.com/k1LoW/sheer-heart-attack/compare/v0.3.0...v0.4.0) (2019-04-12)
 
 * Add track command options to log [#10](https://github.com/k1LoW/sheer-heart-attack/pull/10) ([k1LoW](https://github.com/k1LoW))
