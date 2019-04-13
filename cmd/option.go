@@ -41,7 +41,7 @@ func optionPID(pid int32, nonInteractive bool) (option, error) {
 		_, _ = fmt.Fprintf(os.Stderr, "No process found: %s\n", pidStr)
 		return optionPID(pid, nonInteractive)
 	}
-	fmt.Printf("Target process: %s\n", name)
+	fmt.Printf("Target process name: %s\n", color.Magenta(name))
 
 	fmt.Println("")
 	return option{"--pid", pidStr}, nil
