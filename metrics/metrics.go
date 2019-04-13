@@ -14,8 +14,8 @@ type Metric struct {
 // List ...
 func List() []Metric {
 	return []Metric{
-		{"cpu", "Percentage of the CPU time the process uses (percent).", "%f"},
-		{"mem", "Percentage of the total RAM the process uses (percent).", "%f"},
+		{"cpu", "Percentage of the CPU time the process uses.", "%f"},
+		{"mem", "Percentage of the total RAM the process uses.", "%f"},
 		{"rss", "Non-swapped physical memory the process uses (bytes).", "%d"},
 		{"vms", "Amount of virtual memory the process uses (bytes).", "%d"},
 		{"swap", "Amount of memory that has been swapped out to disk the process uses (bytes).", "%d"},
