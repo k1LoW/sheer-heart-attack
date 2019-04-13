@@ -34,12 +34,9 @@ import (
 	"github.com/k1LoW/sheer-heart-attack/logger"
 	"github.com/k1LoW/sheer-heart-attack/metrics"
 	"github.com/mattn/go-isatty"
-	slack "github.com/monochromegane/slack-incoming-webhooks"
 	"github.com/shirou/gopsutil/process"
-	"github.com/spf13/cast"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
 )
 
 const (
@@ -47,6 +44,7 @@ const (
 	timeoutMessage = "Tracking timeout"
 	executeMessage = "Execute command"
 	endMessage     = "Tracking ended"
+	errorMessage   = "Error"
 )
 
 var force bool
@@ -135,12 +133,12 @@ var trackCmd = &cobra.Command{
 			case <-ticker.C:
 				m, err := metrics.Get(pid)
 				if err != nil {
-					l.Error("error", zap.Error(err))
+					l.Error(errorMessage, zap.Error(err))
 					break L
 				}
 				got, err := expr.Eval(fmt.Sprintf("(%s) == true", threshold), m)
 				if err != nil {
-					l.Error("error", zap.Error(err))
+					l.Error(errorMessage, zap.Error(err))
 					break L
 				}
 				if got.(bool) {
@@ -161,7 +159,7 @@ var trackCmd = &cobra.Command{
 					}
 					l.Info(executeMessage, fields...)
 					if err != nil {
-						l.Error("error", zap.Error(err))
+						l.Error(errorMessage, zap.Error(err))
 						// do not break
 					}
 				}
@@ -207,62 +205,4 @@ func execute(ctx context.Context, command string, envs []string, timeout int) ([
 		return stdout.Bytes(), stderr.Bytes(), err
 	}
 	return stdout.Bytes(), stderr.Bytes(), nil
-}
-
-func notifySlack(webhookURL string, slackChannel string, trackFields []trackField) func(zapcore.Entry) error {
-	return func(e zapcore.Entry) error {
-		name := "Sheer Heart Attack"
-		emoji := ":bomb:"
-		color := "#DBA6CC"
-		var (
-			prefix   string
-			hostname string
-		)
-		switch e.Message {
-		case executeMessage:
-			prefix = ":boom:"
-			color = "#B61972"
-		case timeoutMessage:
-			prefix = ":hourglass:"
-		}
-		payload := slack.Payload{
-			Channel:   slackChannel,
-			IconEmoji: emoji,
-			Username:  name,
-		}
-		attachment := slack.Attachment{
-			Title:      fmt.Sprintf("%s %s", prefix, e.Message),
-			Text:       "_\"Hey, look over <!here>.\"_",
-			Fallback:   e.Message,
-			Color:      color,
-			Timestamp:  time.Now().Unix(),
-			MarkdownIn: []string{"fields"},
-		}
-		for _, f := range trackFields {
-			switch f.key {
-			case "command":
-				attachment.AddField(&slack.Field{
-					Title: fmt.Sprintf("--%s", f.key),
-					Value: fmt.Sprintf("```%s```", cast.ToString(f.value)),
-					Short: false,
-				})
-			case "hostname":
-				hostname = cast.ToString(f.value)
-			case "slack-channel":
-				continue
-			default:
-				attachment.AddField(&slack.Field{
-					Title: fmt.Sprintf("--%s", f.key),
-					Value: cast.ToString(f.value),
-					Short: true,
-				})
-			}
-		}
-		attachment.Footer = hostname
-		payload.AddAttachment(&attachment)
-		slack.Client{
-			WebhookURL: webhookURL,
-		}.Post(&payload)
-		return nil
-	}
 }
