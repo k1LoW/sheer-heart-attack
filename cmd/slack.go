@@ -24,6 +24,9 @@ func notifySlack(webhookURL string, slackChannel string, trackFields []trackFiel
 			color = "#B61972"
 		case timeoutMessage:
 			prefix = ":hourglass:"
+		case errorMessage, executeFailedMessage:
+			prefix = ":bangbang:"
+			color = "#C7243A"
 		}
 		payload := slack.Payload{
 			Channel:   slackChannel,

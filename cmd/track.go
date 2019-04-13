@@ -40,11 +40,12 @@ import (
 )
 
 const (
-	startMessage   = "Tracking start"
-	timeoutMessage = "Tracking timeout"
-	executeMessage = "Execute command"
-	endMessage     = "Tracking ended"
-	errorMessage   = "Error"
+	startMessage         = "Tracking start"
+	timeoutMessage       = "Tracking timeout"
+	executeMessage       = "Execute command"
+	endMessage           = "Tracking ended"
+	errorMessage         = "Error"
+	executeFailedMessage = "Failed to execute command"
 )
 
 var force bool
@@ -159,7 +160,7 @@ var trackCmd = &cobra.Command{
 					}
 					l.Info(executeMessage, fields...)
 					if err != nil {
-						l.Error(errorMessage, zap.Error(err))
+						l.Error(executeFailedMessage, zap.Error(err))
 						// do not break
 					}
 				}
