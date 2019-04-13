@@ -45,7 +45,7 @@ go get github.com/k1LoW/sheer-heart-attack
 
 Just execute `sheer-heart-attack launch`.
 
-### Launch Options (Flags)
+**Launch Options (Flags):**
 
 | Option | Default | Purpose |
 | --- | --- | --- |
@@ -68,7 +68,7 @@ Just execute `sheer-heart-attack launch`.
 | `vms` | Amount of virtual memory the process uses (bytes). |
 | `swap` | Amount of memory that has been swapped out to disk the process uses (bytes). |
 | `connections` | Amount of connections(TCP, UDP or UNIX) the process uses. |
-| `open_files` | Amount of files and file discripters opend by the process. |
+| `open_files` | Amount of files and file discripters opend by the process. **linux only** |
 | `host_cpu` | Percentage of cpu used. |
 | `host_mem` | Percentage of RAM used. |
 | `host_swap` | Amount of memory that has been swapped out to disk (bytes). |
