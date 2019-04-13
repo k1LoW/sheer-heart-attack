@@ -153,7 +153,7 @@ func optionSlackChannel(slackChannel string, nonInteractive bool) (option, error
 	fmt.Println("")
 	url, urlErr := GetEnvSlackIncommingWebhook()
 	if urlErr == nil {
-		fmt.Printf("%s: %s\n", color.Magenta("Slack Incomming Webhook URL", color.B), url)
+		fmt.Printf("%s: %s\n", "Slack Incomming Webhook URL", color.Magenta(url))
 		fmt.Println("")
 	}
 	yn := prompter.YN("Do you want to notify slack channel?", true)
