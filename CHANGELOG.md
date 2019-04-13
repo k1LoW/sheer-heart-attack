@@ -1,5 +1,9 @@
 # Changelog
 
+## [v1.0.1](https://github.com/k1LoW/sheer-heart-attack/compare/v1.0.0...v1.0.1) (2019-04-13)
+
+* Change message [#13](https://github.com/k1LoW/sheer-heart-attack/pull/13) ([k1LoW](https://github.com/k1LoW))
+
 ## [v1.0.0](https://github.com/k1LoW/sheer-heart-attack/compare/v0.4.0...v1.0.0) (2019-04-13)
 
 * Add slack mention `@here` [#12](https://github.com/k1LoW/sheer-heart-attack/pull/12) ([k1LoW](https://github.com/k1LoW))
