@@ -49,14 +49,32 @@ Just execute `sheer-heart-attack launch`.
 
 | Option | Default | Purpose |
 | --- | --- | --- |
-| pid | | PID of the process. |
-| threshold | `cpu > 5 \|\| mem > 10` | Threshold conditions. |
-| interval | `5` | Interval of checking if the threshold exceeded (seconds). |
-| attempts | `1` | Maximum number of attempts continuously exceeding the threshold. |
-| command | | Command to execute when the maximum number of attempts is exceeded. |
-| times | `1` | Maximum number of command executions. If times < 1, track and execute until timeout. |
-| timeout | `86400` | Timeout of tracking (seconds). |
-| slack-channel | | Slack channel to notify. |
+| `pid` | | PID of the process. |
+| `threshold` | `cpu > 5 \|\| mem > 10` | Threshold conditions. |
+| `interval` | `5` | Interval of checking if the threshold exceeded (seconds). |
+| `attempts` | `1` | Maximum number of attempts continuously exceeding the threshold. |
+| `command` | | Command to execute when the maximum number of attempts is exceeded. |
+| `times` | `1` | Maximum number of command executions. If times < 1, track and execute until timeout. |
+| `timeout` | `86400` | Timeout of tracking (seconds). |
+| `slack-channel` | | Slack channel to notify. |
+
+### Set `threshold` using operators
+
+The following operators can be used to set the threshold:
+
+`+`, `-`, `*`, `/`, `==`, `!=`, `<`, `>`, `<=`, `>=`, `not`, `and`, `or`, `!`, `&&`, `||`
+
+For example, you can set the threshold as follows
+
+- `cpu > 10 and mem > 20`
+- `(user + system) > 50 || iowait > 50`
+- `load1 > 5 or load15 > 2`
+
+### Slack Notification
+
+`sheer-heart-attack` find and use [Slack Incomming Webhook](https://api.slack.com/incoming-webhooks) URL via envirionment variables ( `SLACK_INCOMMING_WEBHOOK_URL`, `SLACK_WEBHOOK_URL`, `SLACK_URL` )
+
+
 
 ## Support Metrics
 
