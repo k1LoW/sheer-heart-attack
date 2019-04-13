@@ -51,7 +51,7 @@ const (
 
 var force bool
 
-type trackOption struct {
+type trackField struct {
 	key   string
 	value interface{}
 }
@@ -92,8 +92,13 @@ var trackCmd = &cobra.Command{
 			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
 			os.Exit(1)
 		}
+		hostname, err := os.Hostname()
+		if err != nil {
+			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
+			os.Exit(1)
+		}
 
-		opts := []trackOption{
+		trackFields := []trackField{
 			{"pid", fmt.Sprintf("%d (%s)", pid, name)},
 			{"threshold", threshold},
 			{"interval", interval},
@@ -101,6 +106,7 @@ var trackCmd = &cobra.Command{
 			{"times", timeout},
 			{"slack-channel", slackChannel},
 			{"command", command},
+			{"hostname", hostname},
 		}
 
 		if slackChannel != "" {
@@ -109,10 +115,10 @@ var trackCmd = &cobra.Command{
 				_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
 				os.Exit(1)
 			}
-			l = l.WithOptions(zap.Hooks(notifySlack(webhookURL, slackChannel, opts)))
+			l = l.WithOptions(zap.Hooks(notifySlack(webhookURL, slackChannel, trackFields)))
 		}
 		fields := []zap.Field{}
-		for _, o := range opts {
+		for _, o := range trackFields {
 			fields = append(fields, zap.Any(o.key, o.value))
 		}
 		exceeded := 0
@@ -203,12 +209,15 @@ func execute(ctx context.Context, command string, envs []string, timeout int) ([
 	return stdout.Bytes(), stderr.Bytes(), nil
 }
 
-func notifySlack(webhookURL string, slackChannel string, opts []trackOption) func(zapcore.Entry) error {
+func notifySlack(webhookURL string, slackChannel string, trackFields []trackField) func(zapcore.Entry) error {
 	return func(e zapcore.Entry) error {
 		name := "Sheer Heart Attack"
 		emoji := ":bomb:"
 		color := "#DBA6CC"
-		prefix := ""
+		var (
+			prefix   string
+			hostname string
+		)
 		switch e.Message {
 		case executeMessage:
 			prefix = ":boom:"
@@ -225,26 +234,29 @@ func notifySlack(webhookURL string, slackChannel string, opts []trackOption) fun
 			Title:     fmt.Sprintf("%s %s", prefix, e.Message),
 			Fallback:  e.Message,
 			Color:     color,
-			Footer:    name,
 			Timestamp: time.Now().Unix(),
 		}
-		for _, o := range opts {
-			if o.key == "command" {
+		for _, f := range trackFields {
+			switch f.key {
+			case "command":
 				attachment.AddField(&slack.Field{
-					Title: fmt.Sprintf("--%s", o.key),
-					Value: cast.ToString(o.value),
+					Title: fmt.Sprintf("--%s", f.key),
+					Value: cast.ToString(f.value),
 					Short: false,
 				})
-			} else if o.key == "slack-channel" {
+			case "hostname":
+				hostname = cast.ToString(f.value)
+			case "slack-channel":
 				continue
-			} else {
+			default:
 				attachment.AddField(&slack.Field{
-					Title: fmt.Sprintf("--%s", o.key),
-					Value: cast.ToString(o.value),
+					Title: fmt.Sprintf("--%s", f.key),
+					Value: cast.ToString(f.value),
 					Short: true,
 				})
 			}
 		}
+		attachment.Footer = hostname
 		payload.AddAttachment(&attachment)
 		slack.Client{
 			WebhookURL: webhookURL,
