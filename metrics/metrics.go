@@ -27,7 +27,7 @@ func List() []Metric {
 
 		{"user", "Percentage of CPU utilization that occurred while executing at the user level.", "%f"},
 		{"system", "Percentage of CPU utilization that occurred while executing at the system level.", "%f"},
-		{"idle", "Percentage of time that the CPU or CPUs were idle and the system did not have an outstanding disk I/O request.", "%f"},
+		{"idle", "Percentage of time that CPUs were idle and the system did not have an outstanding disk I/O request.", "%f"},
 		{"nice", "Percentage of CPU utilization that occurred while executing at the user level with nice priority.", "%f"},
 		{"iowait", "Percentage of time that CPUs were idle during which the system had an outstanding disk I/O request.", "%f"},
 		{"irq", "Percentage of time spent by CPUs to service hardware interrupts.", "%f"},

@@ -74,7 +74,7 @@ Just execute `sheer-heart-attack launch`.
 | `host_swap` | Amount of memory that has been swapped out to disk (bytes). |
 | `user` | Percentage of CPU utilization that occurred while executing at the user level. |
 | `system` | Percentage of CPU utilization that occurred while executing at the system level. |
-| `idle` | Percentage of time that the CPU or CPUs were idle and the system did not have an outstanding disk I/O request. |
+| `idle` | Percentage of time that CPUs were idle and the system did not have an outstanding disk I/O request. |
 | `nice` | Percentage of CPU utilization that occurred while executing at the user level with nice priority. |
 | `iowait` | Percentage of time that CPUs were idle during which the system had an outstanding disk I/O request. |
 | `irq` | Percentage of time spent by CPUs to service hardware interrupts. |
