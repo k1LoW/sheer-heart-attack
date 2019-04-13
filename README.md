@@ -7,7 +7,7 @@
 ## Features
 
 - Easy to use (just execute `sheer-heart-attack launch`).
-- Track the process or host metrics. and execute specified command when threshold is exceeded.
+- Track the process and/or host metrics. and execute specified command when threshold is exceeded.
 - Record the STDOUT and STDERR of the executed command in the structured log.
 - Slack notification.
 
