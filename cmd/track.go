@@ -231,17 +231,19 @@ func notifySlack(webhookURL string, slackChannel string, trackFields []trackFiel
 			Username:  name,
 		}
 		attachment := slack.Attachment{
-			Title:     fmt.Sprintf("%s %s", prefix, e.Message),
-			Fallback:  e.Message,
-			Color:     color,
-			Timestamp: time.Now().Unix(),
+			Title:      fmt.Sprintf("%s %s", prefix, e.Message),
+			Text:       "_\"Hey, look at me <!here>.\"_",
+			Fallback:   e.Message,
+			Color:      color,
+			Timestamp:  time.Now().Unix(),
+			MarkdownIn: []string{"fields"},
 		}
 		for _, f := range trackFields {
 			switch f.key {
 			case "command":
 				attachment.AddField(&slack.Field{
 					Title: fmt.Sprintf("--%s", f.key),
-					Value: cast.ToString(f.value),
+					Value: fmt.Sprintf("```%s```", cast.ToString(f.value)),
 					Short: false,
 				})
 			case "hostname":
