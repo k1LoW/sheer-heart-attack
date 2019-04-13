@@ -1,13 +1,13 @@
 # Sheer Heart Attack [![GitHub release](https://img.shields.io/github/release/k1LoW/sheer-heart-attack.svg)](https://github.com/k1LoW/sheer-heart-attack/releases)
 
-`sheer-heart-attack` is a debugging tool that can execute any command on the process/host metrics trigger.
+`sheer-heart-attack` is a debugging tool that can execute any command on process/host metrics trigger.
 
 ![screencast](screencast.svg)
 
 ## Features
 
 - Easy to use (just execute `sheer-heart-attack launch`).
-- Track the process and/or host metrics. and execute specified command when threshold is exceeded.
+- Track process and/or host metrics. and execute specified command when threshold is exceeded.
 - Record the STDOUT and STDERR of the executed command in the structured log.
 - Slack notification.
 
