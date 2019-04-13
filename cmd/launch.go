@@ -112,7 +112,7 @@ var launchCmd = &cobra.Command{
 
 		envs := os.Environ()
 		c := exec.Command(trackCommand[0], trackCommand[1:]...)
-		envs = append(envs, "PID=%s", pidStr)
+		envs = append(envs, fmt.Sprintf("PID=%s", pidStr))
 		c.Env = envs
 		c.Start()
 
