@@ -232,7 +232,7 @@ func notifySlack(webhookURL string, slackChannel string, trackFields []trackFiel
 		}
 		attachment := slack.Attachment{
 			Title:      fmt.Sprintf("%s %s", prefix, e.Message),
-			Text:       "_\"Hey, look at me <!here>.\"_",
+			Text:       "_\"Hey, look over <!here>.\"_",
 			Fallback:   e.Message,
 			Color:      color,
 			Timestamp:  time.Now().Unix(),
