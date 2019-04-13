@@ -74,7 +74,7 @@ For example, you can set the threshold as follows
 
 `sheer-heart-attack` find and use [Slack Incomming Webhook](https://api.slack.com/incoming-webhooks) URL via envirionment variables ( `SLACK_INCOMMING_WEBHOOK_URL`, `SLACK_WEBHOOK_URL`, `SLACK_URL` )
 
-
+![slack](slack.png)
 
 ## Support Metrics
 
