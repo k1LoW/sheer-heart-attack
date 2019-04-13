@@ -1,5 +1,9 @@
 # Changelog
 
+## [v1.0.2](https://github.com/k1LoW/sheer-heart-attack/compare/v1.0.1...v1.0.2) (2019-04-13)
+
+* Fix bug set $PID [#14](https://github.com/k1LoW/sheer-heart-attack/pull/14) ([k1LoW](https://github.com/k1LoW))
+
 ## [v1.0.1](https://github.com/k1LoW/sheer-heart-attack/compare/v1.0.0...v1.0.1) (2019-04-13)
 
 * Change message [#13](https://github.com/k1LoW/sheer-heart-attack/pull/13) ([k1LoW](https://github.com/k1LoW))
