@@ -4,6 +4,13 @@
 
 ![screencast](screencast.svg)
 
+## Features
+
+- Easy to use.
+- Track the process or host metrics. and execute specified command when threshold is exceeded.
+- Record the STDOUT and STDERR of the executed command in the structured log.
+- Slack notification.
+
 ## Quick Start
 
 > This is the recommended usage.
