@@ -28,6 +28,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"sync"
 	"time"
 
 	"github.com/antonmedv/expr"
@@ -124,6 +125,7 @@ var trackCmd = &cobra.Command{
 		exceeded := 0
 		executed := 0
 		l.Info(startMessage, fields...)
+		sg := sync.WaitGroup{}
 
 	L:
 		for {
@@ -148,21 +150,26 @@ var trackCmd = &cobra.Command{
 					exceeded = 0
 				}
 				if exceeded >= attempts {
-					stdout, stderr, err := execute(ctx, command, envs, interval)
-					executed++
-					exceeded = 0
-					fields := []zap.Field{
-						zap.ByteString("stdout", stdout),
-						zap.ByteString("stderr", stderr),
-					}
-					for k, v := range m {
-						fields = append(fields, zap.Any(k, v))
-					}
-					l.Info(executeMessage, fields...)
-					if err != nil {
-						l.Error(executeFailedMessage, zap.Error(err))
-						// do not break
-					}
+					sg.Add(1)
+					go func(ctx context.Context) {
+						executtionTimeout := interval * 3
+						stdout, stderr, err := execute(ctx, command, envs, executtionTimeout)
+						executed++
+						exceeded = 0
+						fields := []zap.Field{
+							zap.ByteString("stdout", stdout),
+							zap.ByteString("stderr", stderr),
+						}
+						for k, v := range m {
+							fields = append(fields, zap.Any(k, v))
+						}
+						l.Info(executeMessage, fields...)
+						if err != nil {
+							l.Error(executeFailedMessage, zap.Error(err))
+							// do not break
+						}
+						sg.Done()
+					}(ctx)
 				}
 				if times > 0 && executed >= times {
 					break L
@@ -171,6 +178,8 @@ var trackCmd = &cobra.Command{
 				break L
 			}
 		}
+
+		sg.Wait()
 		l.Info(endMessage)
 	},
 }
