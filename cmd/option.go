@@ -104,7 +104,7 @@ func optionCommand(command string, nonInteractive bool) (option, error) {
 	if nonInteractive {
 		return option{"--command", command}, nil
 	}
-	fmt.Printf("%s ... %s\n", color.Magenta("--command", color.B), "Command to execute when the maximum number of attempts is exceeded.execution. If command execution time > 'interval' * 3, command is killed.")
+	fmt.Printf("%s ... %s\n", color.Magenta("--command", color.B), "Command to execute when the maximum number of attempts is exceeded.execution. If command execution time > 'interval' * 3, kill command.")
 	fmt.Println("")
 	fmt.Printf("%s\n", color.White("Additional Environment Variables", color.B))
 	fmt.Printf("  %s: %s\n", color.White("$PID", color.B), "PID of the process.")
