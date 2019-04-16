@@ -72,6 +72,7 @@ var trackCmd = &cobra.Command{
 			os.Exit(1)
 		}
 		ctx, cancel := context.WithCancel(context.Background())
+		defer cancel()
 		timer := time.NewTimer(time.Duration(timeout) * time.Second)
 		ticker := time.NewTicker(time.Duration(interval) * time.Second)
 		envs := os.Environ()
@@ -129,7 +130,6 @@ var trackCmd = &cobra.Command{
 			select {
 			case <-timer.C:
 				l.Info(timeoutMessage)
-				cancel()
 				break L
 			case <-ticker.C:
 				m, err := metrics.Get(pid)
@@ -165,11 +165,9 @@ var trackCmd = &cobra.Command{
 					}
 				}
 				if times > 0 && executed >= times {
-					cancel()
 					break L
 				}
 			case <-ctx.Done():
-				cancel()
 				break L
 			}
 		}
