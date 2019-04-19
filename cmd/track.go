@@ -116,7 +116,7 @@ var trackCmd = &cobra.Command{
 				_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
 				os.Exit(1)
 			}
-			l = l.WithOptions(zap.Hooks(notifySlack(webhookURL, slackChannel, trackFields)))
+			l = l.WithOptions(zap.Hooks(notifySlack(webhookURL, slackChannel, slackMention, trackFields)))
 		}
 		fields := []zap.Field{}
 		for _, o := range trackFields {
@@ -194,6 +194,7 @@ func init() {
 	trackCmd.Flags().IntVarP(&times, "times", "", 1, "Maximum number of command executions. If times < 1, track and execute until timeout")
 	trackCmd.Flags().IntVarP(&timeout, "timeout", "", 60*60*24, "Timeout of tracking (seconds)")
 	trackCmd.Flags().StringVarP(&slackChannel, "slack-channel", "", "", "Slack channel to notify")
+	trackCmd.Flags().StringVarP(&slackMention, "slack-mention", "", "", "Slack mention")
 	trackCmd.Flags().BoolVarP(&force, "force", "", false, "Force execute 'track' command on tty")
 }
 

@@ -36,6 +36,7 @@ var (
 	times        int
 	timeout      int
 	slackChannel string
+	slackMention string
 )
 
 // rootCmd represents the base command when called without any subcommands

@@ -9,7 +9,13 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
-func notifySlack(webhookURL string, slackChannel string, trackFields []trackField) func(zapcore.Entry) error {
+func notifySlack(webhookURL string, slackChannel string, slackMention string, trackFields []trackField) func(zapcore.Entry) error {
+	text := "_\"Hey, look over here.\"_"
+	if slackMention == "@here" {
+		text = "_\"Hey, look over <!here>.\"_"
+	} else if slackMention != "" {
+		text = fmt.Sprintf("_\"Hey <%s>, look over here.\"_", slackMention)
+	}
 	return func(e zapcore.Entry) error {
 		name := "Sheer Heart Attack"
 		emoji := ":bomb:"
@@ -35,7 +41,7 @@ func notifySlack(webhookURL string, slackChannel string, trackFields []trackFiel
 		}
 		attachment := slack.Attachment{
 			Title:      fmt.Sprintf("%s %s", prefix, e.Message),
-			Text:       "_\"Hey, look over <!here>.\"_",
+			Text:       text,
 			Fallback:   e.Message,
 			Color:      color,
 			Timestamp:  time.Now().Unix(),
