@@ -175,6 +175,27 @@ func optionSlackChannel(slackChannel string, nonInteractive bool) (option, error
 	return option{"--slack-channel", slackChannel}, nil
 }
 
+// optionSlackMention ...
+func optionSlackMention(slackMention string, nonInteractive bool) (option, error) {
+	if nonInteractive {
+		if slackMention == "" {
+			return option{}, nil
+		} else {
+			return option{"--slack-mention", slackMention}, nil
+		}
+	}
+	fmt.Printf("%s ... %s\n", color.Magenta("--slack-mention", color.B), "Slack mention.")
+	fmt.Println("")
+	yn := prompter.YN("Do you want to mention?", true)
+	if !yn {
+		fmt.Println("")
+		return option{}, nil
+	}
+	slackMention = prompter.Prompt("Enter mention [@here or user_id(UXXXXXXXX)]", slackMention)
+	fmt.Println("")
+	return option{"--slack-mention", slackMention}, nil
+}
+
 // GetEnvSlackIncommingWebhook return slack incomming webhook URL via os.Envirion
 func GetEnvSlackIncommingWebhook() (string, error) {
 	envKeys := []string{

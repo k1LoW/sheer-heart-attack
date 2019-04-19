@@ -109,6 +109,15 @@ var launchCmd = &cobra.Command{
 			os.Exit(1)
 		}
 		trackCommand = append(trackCommand, optSlackChannel...)
+		// slack-mention
+		if optSlackChannel[1] != "" {
+			optSlackMention, err := optionSlackMention(slackMention, nonInteractive)
+			if err != nil {
+				_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
+				os.Exit(1)
+			}
+			trackCommand = append(trackCommand, optSlackMention...)
+		}
 
 		envs := os.Environ()
 		c := exec.Command(trackCommand[0], trackCommand[1:]...)
@@ -132,4 +141,5 @@ func init() {
 	launchCmd.Flags().IntVarP(&times, "times", "", 1, "Maximum number of command executions. If times < 1, track and execute until timeout")
 	launchCmd.Flags().IntVarP(&timeout, "timeout", "", 60*60*24, "Timeout of tracking (seconds)")
 	launchCmd.Flags().StringVarP(&slackChannel, "slack-channel", "", "", "Slack channel to notify")
+	launchCmd.Flags().StringVarP(&slackMention, "slack-mention", "", "", "Slack mention")
 }
