@@ -1,5 +1,10 @@
 # Changelog
 
+## [v1.2.0](https://github.com/k1LoW/sheer-heart-attack/compare/v1.1.0...v1.2.0) (2019-04-19)
+
+* Add `--slack-mention` for Slack meniton [#17](https://github.com/k1LoW/sheer-heart-attack/pull/17) ([k1LoW](https://github.com/k1LoW))
+*  Async command execution [#16](https://github.com/k1LoW/sheer-heart-attack/pull/16) ([k1LoW](https://github.com/k1LoW))
+
 ## [v1.1.0](https://github.com/k1LoW/sheer-heart-attack/compare/v1.0.2...v1.1.0) (2019-04-13)
 
 * Fix error message [#15](https://github.com/k1LoW/sheer-heart-attack/pull/15) ([k1LoW](https://github.com/k1LoW))
