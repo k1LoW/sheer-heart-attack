@@ -57,6 +57,7 @@ Just execute `sheer-heart-attack launch`.
 | `times` | `1` | Maximum number of command executions. If times < 1, track and execute until timeout. |
 | `timeout` | `86400` | Timeout of tracking (seconds). |
 | `slack-channel` | | Slack channel to notify. |
+| `slack-mention` | | Slack mention. (`@here` or user_id `@UXXXXXXXXX`) |
 
 ### Set `threshold` using operators
 

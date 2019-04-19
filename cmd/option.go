@@ -191,7 +191,7 @@ func optionSlackMention(slackMention string, nonInteractive bool) (option, error
 		fmt.Println("")
 		return option{}, nil
 	}
-	slackMention = prompter.Prompt("Enter mention [@here or user_id(UXXXXXXXX)]", slackMention)
+	slackMention = prompter.Prompt("Enter mention [@here or user_id (ex. @UXXXXXXXX)]", slackMention)
 	fmt.Println("")
 	return option{"--slack-mention", slackMention}, nil
 }
