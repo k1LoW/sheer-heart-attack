@@ -23,9 +23,10 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"github.com/k1LoW/exec"
 	"strconv"
 	"strings"
+
+	"github.com/k1LoW/exec"
 
 	"github.com/labstack/gommon/color"
 	"github.com/spf13/cobra"
@@ -110,7 +111,7 @@ var launchCmd = &cobra.Command{
 		}
 		trackCommand = append(trackCommand, optSlackChannel...)
 		// slack-mention
-		if optSlackChannel[1] != "" {
+		if len(optSlackChannel) == 2 && optSlackChannel[1] != "" {
 			optSlackMention, err := optionSlackMention(slackMention, nonInteractive)
 			if err != nil {
 				_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
