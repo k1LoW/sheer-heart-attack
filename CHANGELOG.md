@@ -1,5 +1,11 @@
 # Changelog
 
+## [v1.3.0](https://github.com/k1LoW/sheer-heart-attack/compare/v1.2.0...v1.3.0) (2019-07-29)
+
+* Fix some using gosec [#20](https://github.com/k1LoW/sheer-heart-attack/pull/20) ([k1LoW](https://github.com/k1LoW))
+* Fix: panic: runtime error: index out of range [#19](https://github.com/k1LoW/sheer-heart-attack/pull/19) ([k1LoW](https://github.com/k1LoW))
+* Use github.com/k1LoW/exec [#18](https://github.com/k1LoW/sheer-heart-attack/pull/18) ([k1LoW](https://github.com/k1LoW))
+
 ## [v1.2.0](https://github.com/k1LoW/sheer-heart-attack/compare/v1.1.0...v1.2.0) (2019-04-19)
 
 * Add `--slack-mention` for Slack meniton [#17](https://github.com/k1LoW/sheer-heart-attack/pull/17) ([k1LoW](https://github.com/k1LoW))
