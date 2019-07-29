@@ -168,7 +168,10 @@ func optionSlackChannel(slackChannel string, nonInteractive bool) (option, error
 			_, _ = fmt.Fprintf(os.Stderr, "%s\n", errors.New("Invalid URL"))
 			return optionSlackChannel(slackChannel, nonInteractive)
 		}
-		os.Setenv("SLACK_INCOMMING_WEBHOOK_URL", url)
+		err := os.Setenv("SLACK_INCOMMING_WEBHOOK_URL", url)
+		if err != nil {
+			return option{}, err
+		}
 	}
 	slackChannel = prompter.Prompt("Enter slack channel", slackChannel)
 	fmt.Println("")
