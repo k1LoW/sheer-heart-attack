@@ -69,9 +69,12 @@ func notifySlack(webhookURL string, slackChannel string, slackMention string, tr
 		}
 		attachment.Footer = hostname
 		payload.AddAttachment(&attachment)
-		slack.Client{
+		err := slack.Client{
 			WebhookURL: webhookURL,
 		}.Post(&payload)
+		if err != nil {
+			return err
+		}
 		return nil
 	}
 }

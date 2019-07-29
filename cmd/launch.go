@@ -124,7 +124,11 @@ var launchCmd = &cobra.Command{
 		c := exec.Command(trackCommand[0], trackCommand[1:]...)
 		envs = append(envs, fmt.Sprintf("PID=%s", pidStr))
 		c.Env = envs
-		c.Start()
+		err = c.Start()
+		if err != nil {
+			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
+			os.Exit(1)
+		}
 
 		fmt.Printf("%s %s\n", color.Magenta("Launched:", color.B), strings.Join(trackCommand, " "))
 	},
