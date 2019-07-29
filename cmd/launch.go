@@ -23,7 +23,7 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"os/exec"
+	"github.com/k1LoW/exec"
 	"strconv"
 	"strings"
 

@@ -26,7 +26,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"os/exec"
+	"github.com/k1LoW/exec"
 	"path/filepath"
 	"sync"
 	"time"

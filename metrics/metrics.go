@@ -1,7 +1,7 @@
 package metrics
 
 import (
-	"os/exec"
+	"github.com/k1LoW/exec"
 	"strconv"
 )
 
