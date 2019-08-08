@@ -1,5 +1,9 @@
 # Changelog
 
+## [v2.0.0](https://github.com/k1LoW/sheer-heart-attack/compare/v1.3.0...v2.0.0) (2019-08-09)
+
+* [BREAKING] Use github.com/k1LoW/metr [#21](https://github.com/k1LoW/sheer-heart-attack/pull/21) ([k1LoW](https://github.com/k1LoW))
+
 ## [v1.3.0](https://github.com/k1LoW/sheer-heart-attack/compare/v1.2.0...v1.3.0) (2019-07-29)
 
 * Fix some using gosec [#20](https://github.com/k1LoW/sheer-heart-attack/pull/20) ([k1LoW](https://github.com/k1LoW))
