@@ -81,16 +81,16 @@ For example, you can set the threshold as follows
 
 | Metric | |
 | --- | --- |
-| `cpu` | Percentage of the CPU time the process uses (percent). |
-| `mem` | Percentage of the total RAM the process uses (percent). |
-| `rss` | Non-swapped physical memory the process uses (bytes). |
-| `vms` | Amount of virtual memory the process uses (bytes). |
-| `swap` | Amount of memory that has been swapped out to disk the process uses (bytes). |
-| `connections` | Amount of connections(TCP, UDP or UNIX) the process uses. |
-| `open_files` | Amount of files and file discripters opend by the process. **linux only** |
-| `host_cpu` | Percentage of cpu used. |
-| `host_mem` | Percentage of RAM used. |
-| `host_swap` | Amount of memory that has been swapped out to disk (bytes). |
+| `proc_cpu` | Percentage of the CPU time the process uses (percent). |
+| `proc_mem` | Percentage of the total RAM the process uses (percent). |
+| `proc_rss` | Non-swapped physical memory the process uses (bytes). |
+| `proc_vms` | Amount of virtual memory the process uses (bytes). |
+| `proc_swap` | Amount of memory that has been swapped out to disk the process uses (bytes). |
+| `proc_connections` | Amount of connections(TCP, UDP or UNIX) the process uses. |
+| `proc_open_files` | Amount of files and file discripters opend by the process. **linux only** |
+| `cpu` | Percentage of cpu used. |
+| `mem` | Percentage of RAM used. |
+| `swap` | Amount of memory that has been swapped out to disk (bytes). |
 | `user` | Percentage of CPU utilization that occurred while executing at the user level. |
 | `system` | Percentage of CPU utilization that occurred while executing at the system level. |
 | `idle` | Percentage of time that CPUs were idle and the system did not have an outstanding disk I/O request. |
