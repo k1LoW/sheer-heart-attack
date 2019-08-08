@@ -26,14 +26,14 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"github.com/k1LoW/exec"
 	"path/filepath"
 	"sync"
 	"time"
 
 	"github.com/antonmedv/expr"
+	"github.com/k1LoW/exec"
+	"github.com/k1LoW/metr/metrics"
 	"github.com/k1LoW/sheer-heart-attack/logger"
-	"github.com/k1LoW/sheer-heart-attack/metrics"
 	"github.com/mattn/go-isatty"
 	"github.com/shirou/gopsutil/process"
 	"github.com/spf13/cobra"
@@ -134,12 +134,12 @@ var trackCmd = &cobra.Command{
 				l.Info(timeoutMessage)
 				break L
 			case <-ticker.C:
-				m, err := metrics.Get(pid)
+				m, err := metrics.GetMetrics(collectInterval, pid)
 				if err != nil {
 					l.Error(errorMessage, zap.Error(err))
 					break L
 				}
-				got, err := expr.Eval(fmt.Sprintf("(%s) == true", threshold), m)
+				got, err := expr.Eval(fmt.Sprintf("(%s) == true", threshold), m.Raw())
 				if err != nil {
 					l.Error(errorMessage, zap.Error(err))
 					break L
@@ -160,9 +160,9 @@ var trackCmd = &cobra.Command{
 							zap.ByteString("stdout", stdout),
 							zap.ByteString("stderr", stderr),
 						}
-						for k, v := range m {
-							fields = append(fields, zap.Any(k, v))
-						}
+						m.Each(func(metric metrics.Metric, value interface{}) {
+							fields = append(fields, zap.Any(metric.Name, value))
+						})
 						l.Info(executeMessage, fields...)
 						if err != nil {
 							l.Error(executeFailedMessage, zap.Error(err))

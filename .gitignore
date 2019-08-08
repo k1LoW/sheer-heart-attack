@@ -2,3 +2,4 @@ dist/
 sheer-heart-attack
 sheer-heart-attack-logs
 *.log
+coverage.txt

@@ -7,12 +7,14 @@ import (
 	"strconv"
 
 	"github.com/Songmu/prompter"
-	"github.com/k1LoW/sheer-heart-attack/metrics"
+	"github.com/k1LoW/metr/metrics"
 	"github.com/labstack/gommon/color"
 	"github.com/shirou/gopsutil/process"
 )
 
 type option []string
+
+const collectInterval = 500
 
 // optionPID ...
 func optionPID(pid int32, nonInteractive bool) (option, error) {
@@ -52,19 +54,18 @@ func optionThreshold(threshold string, pid int32, nonInteractive bool) (option, 
 	if nonInteractive {
 		return option{"--threshold", threshold}, nil
 	}
-	m, err := metrics.Get(pid)
+	m, err := metrics.GetMetrics(collectInterval, pid)
 	if err != nil {
 		return option{}, err
 	}
 	fmt.Printf("%s ... %s\n", color.Magenta("--threshold", color.B), "Threshold conditions.")
 	fmt.Println("")
 	fmt.Printf("%s\n", color.Magenta("Available Metrics", color.B))
-	mlist := metrics.List()
-	for _, metric := range mlist {
-		if of, ok := m[metric.Name]; ok {
-			fmt.Printf("  %s (now:%s): %s\n", color.White(metric.Name), color.Magenta(fmt.Sprintf(metric.Format, of)), metric.Description)
-		}
-	}
+
+	m.Each(func(metric metrics.Metric, value interface{}) {
+		fmt.Printf("  %s (now:%s %s): %s\n", color.White(metric.Name), color.Magenta(fmt.Sprintf(metric.Format, value)), metric.Unit, metric.Description)
+	})
+
 	fmt.Printf("%s\n", color.Magenta("Available Operators", color.B))
 	fmt.Printf("  %s\n", "+, -, *, /, ==, !=, <, >, <=, >=, not, and, or, !, &&, ||")
 	fmt.Println("")
