@@ -212,5 +212,5 @@ func GetEnvSlackIncommingWebhook() (string, error) {
 			return url, nil
 		}
 	}
-	return "", errors.New(fmt.Sprintf("Slack incomming webhook url environment variables are not found %s", envKeys))
+	return "", fmt.Errorf("Slack incomming webhook url environment variables are not found %s", envKeys)
 }
