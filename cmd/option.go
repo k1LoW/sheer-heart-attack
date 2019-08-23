@@ -166,7 +166,7 @@ func optionSlackChannel(slackChannel string, nonInteractive bool) (option, error
 		_, _ = fmt.Fprintf(os.Stderr, "%s\n", urlErr)
 		url = prompter.Prompt("Enter slack incoming webhook URL", "")
 		if url == "" {
-			_, _ = fmt.Fprintf(os.Stderr, "%s\n", errors.New("Invalid URL"))
+			_, _ = fmt.Fprintf(os.Stderr, "%s\n", errors.New("invalid URL"))
 			return optionSlackChannel(slackChannel, nonInteractive)
 		}
 		err := os.Setenv("SLACK_INCOMMING_WEBHOOK_URL", url)
@@ -212,5 +212,5 @@ func GetEnvSlackIncommingWebhook() (string, error) {
 			return url, nil
 		}
 	}
-	return "", fmt.Errorf("Slack incomming webhook url environment variables are not found %s", envKeys)
+	return "", fmt.Errorf("slack incomming webhook url environment variables are not found %s", envKeys)
 }
