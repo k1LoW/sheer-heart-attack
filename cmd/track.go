@@ -83,15 +83,17 @@ var trackCmd = &cobra.Command{
 			os.Exit(1)
 		}
 		l := logger.NewLogger(logPath)
-		p, err := process.NewProcess(pid)
-		if err != nil {
-			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
-			os.Exit(1)
-		}
-		name, err := p.Name()
-		if err != nil {
-			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
-			os.Exit(1)
+		if pid > 0 {
+			p, err := process.NewProcess(pid)
+			if err != nil {
+				_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
+				os.Exit(1)
+			}
+			name, err = p.Name()
+			if err != nil {
+				_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
+				os.Exit(1)
+			}
 		}
 		hostname, err := os.Hostname()
 		if err != nil {
@@ -100,7 +102,8 @@ var trackCmd = &cobra.Command{
 		}
 
 		trackFields := []trackField{
-			{"pid", fmt.Sprintf("%d (%s)", pid, name)},
+			{"pid", fmt.Sprintf("%d", pid)},
+			{"name", name},
 			{"threshold", threshold},
 			{"interval", interval},
 			{"attempts", attempts},
@@ -134,10 +137,29 @@ var trackCmd = &cobra.Command{
 				l.Info(timeoutMessage)
 				break L
 			case <-ticker.C:
-				m, err := metrics.GetMetrics(collectInterval, pid)
-				if err != nil {
-					l.Error(errorMessage, zap.Error(err))
-					break L
+				var (
+					m   *metrics.Metrics
+					err error
+				)
+				switch {
+				case pid > 0:
+					m, err = metrics.GetMetrics(collectInterval, pid)
+					if err != nil {
+						l.Error(errorMessage, zap.Error(err))
+						break L
+					}
+				case name != "":
+					m, err = metrics.GetMetricsByName(collectInterval, name)
+					if err != nil {
+						l.Error(errorMessage, zap.Error(err))
+						break L
+					}
+				default:
+					m, err = metrics.GetMetrics(collectInterval)
+					if err != nil {
+						l.Error(errorMessage, zap.Error(err))
+						break L
+					}
 				}
 				got, err := expr.Eval(fmt.Sprintf("(%s) == true", threshold), m.Raw())
 				if err != nil {
@@ -187,6 +209,7 @@ var trackCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(trackCmd)
 	trackCmd.Flags().Int32VarP(&pid, "pid", "", 0, "PID of the process")
+	trackCmd.Flags().StringVarP(&name, "name", "", "", "name of the process")
 	trackCmd.Flags().StringVarP(&threshold, "threshold", "", "cpu > 5 || mem > 10", "Threshold conditions")
 	trackCmd.Flags().IntVarP(&interval, "interval", "", 5, "Interval of checking if the threshold exceeded (seconds)")
 	trackCmd.Flags().IntVarP(&attempts, "attempts", "", 1, "Maximum number of attempts continuously exceeding the threshold")

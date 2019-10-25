@@ -16,48 +16,80 @@ type option []string
 
 const collectInterval = 500
 
-// optionPID ...
-func optionPID(pid int32, nonInteractive bool) (option, error) {
-	pidStr := strconv.Itoa(int(pid))
-	if pidStr == "0" {
-		pidStr = ""
+// optionProcess ...
+func optionProcess(pid int32, name string, nonInteractive bool) (int32, string, option, error) {
+	if pid > 0 && name != "" {
+		return pid, name, option{}, errors.New("you can only use either --pid or --name")
 	}
-	if nonInteractive {
-		return option{"--pid", pidStr}, nil
+
+	processStr := strconv.Itoa(int(pid))
+	if processStr == "0" {
+		processStr = name
 	}
+
 	fmt.Printf("%s ... %s\n", color.Magenta("--pid", color.B), "PID of the process.")
+	fmt.Printf("%s ... %s\n", color.Magenta("--name", color.B), "name of the process.")
 	fmt.Println("")
-	pidStr = prompter.Prompt("Enter pid", pidStr)
-	pidInt32, err := strconv.ParseInt(pidStr, 10, 32)
-	if err != nil {
-		_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
-		return optionPID(pid, nonInteractive)
+
+	processStr = prompter.Prompt("Enter PID or name of the process", processStr)
+
+	pidInt64, err := strconv.ParseInt(processStr, 10, 32)
+	if err == nil {
+		pid = int32(pidInt64)
+		p, err := process.NewProcess(pid)
+		if err != nil {
+			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
+			return optionProcess(pid, name, nonInteractive)
+		}
+		name, err = p.Name()
+		if err != nil || name == "" {
+			_, _ = fmt.Fprintf(os.Stderr, "No process found: %d\n", pid)
+			return optionProcess(pid, name, nonInteractive)
+		}
+
+		fmt.Printf("Target process name: %s\n", color.Magenta(name))
+		fmt.Println("")
+		return pid, "", option{"--pid", processStr}, nil
 	}
-	p, err := process.NewProcess(int32(pidInt32))
-	if err != nil {
-		_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
-		return optionPID(pid, nonInteractive)
+
+	if processStr != "" {
+		fmt.Printf("Target process name: %s\n", color.Magenta(processStr))
+		fmt.Println("")
+		return 0, processStr, option{"--name", processStr}, nil
 	}
-	name, err := p.Name()
-	if err != nil || name == "" {
-		_, _ = fmt.Fprintf(os.Stderr, "No process found: %s\n", pidStr)
-		return optionPID(pid, nonInteractive)
-	}
-	fmt.Printf("Target process name: %s\n", color.Magenta(name))
 
 	fmt.Println("")
-	return option{"--pid", pidStr}, nil
+	return 0, "", option{}, nil
 }
 
 // optionThreshold ...
-func optionThreshold(threshold string, pid int32, nonInteractive bool) (option, error) {
+func optionThreshold(threshold string, pid int32, name string, nonInteractive bool) (option, error) {
 	if nonInteractive {
 		return option{"--threshold", threshold}, nil
 	}
-	m, err := metrics.GetMetrics(collectInterval, pid)
-	if err != nil {
-		return option{}, err
+	var (
+		m   *metrics.Metrics
+		err error
+	)
+
+	switch {
+	case pid > 0:
+		m, err = metrics.GetMetrics(collectInterval, pid)
+		if err != nil {
+			return option{}, err
+		}
+	case name != "":
+		m, err = metrics.GetMetricsByName(collectInterval, name)
+		if err != nil {
+			return option{}, err
+		}
+	default:
+		m, err = metrics.GetMetrics(collectInterval)
+		if err != nil {
+			return option{}, err
+		}
 	}
+
 	fmt.Printf("%s ... %s\n", color.Magenta("--threshold", color.B), "Threshold conditions.")
 	fmt.Println("")
 	fmt.Printf("%s\n", color.Magenta("Available Metrics", color.B))

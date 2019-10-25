@@ -23,7 +23,6 @@ package cmd
 import (
 	"fmt"
 	"os"
-	"strconv"
 	"strings"
 
 	"github.com/k1LoW/exec"
@@ -48,21 +47,16 @@ var launchCmd = &cobra.Command{
 
 		trackCommand := []string{exe, "track"}
 
-		// pid
-		optPID, err := optionPID(pid, nonInteractive)
+		// pid or name or none
+		pid, name, optProcess, err := optionProcess(pid, name, nonInteractive)
 		if err != nil {
 			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
 			os.Exit(1)
 		}
-		pidStr := optPID[1]
-		trackCommand = append(trackCommand, optPID...)
+		trackCommand = append(trackCommand, optProcess...)
+
 		// threshold
-		pidInt32, err := strconv.ParseInt(pidStr, 10, 32)
-		if err != nil {
-			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
-			os.Exit(1)
-		}
-		optThreshold, err := optionThreshold(threshold, int32(pidInt32), nonInteractive)
+		optThreshold, err := optionThreshold(threshold, pid, name, nonInteractive)
 		if err != nil {
 			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
 			os.Exit(1)
@@ -122,7 +116,10 @@ var launchCmd = &cobra.Command{
 
 		envs := os.Environ()
 		c := exec.Command(trackCommand[0], trackCommand[1:]...)
-		envs = append(envs, fmt.Sprintf("PID=%s", pidStr))
+		if pid > 0 {
+			envs = append(envs, fmt.Sprintf("PID=%d", pid))
+		}
+
 		c.Env = envs
 		err = c.Start()
 		if err != nil {
@@ -139,6 +136,7 @@ func init() {
 	launchCmd.Flags().BoolVarP(&nonInteractive, "non-interactive", "", false, "Disables all interactive prompting.")
 
 	launchCmd.Flags().Int32VarP(&pid, "pid", "", 0, "PID of the process")
+	launchCmd.Flags().StringVarP(&name, "name", "", "", "name of the process")
 	launchCmd.Flags().StringVarP(&threshold, "threshold", "", "cpu > 5 || mem > 10", "Threshold conditions")
 	launchCmd.Flags().IntVarP(&interval, "interval", "", 5, "Interval of checking if the threshold exceeded (seconds)")
 	launchCmd.Flags().IntVarP(&attempts, "attempts", "", 1, "Maximum number of attempts continuously exceeding the threshold")
