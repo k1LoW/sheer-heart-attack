@@ -58,6 +58,7 @@ func optionProcess(pid int32, name string, nonInteractive bool) (int32, string, 
 		return 0, processStr, option{"--name", processStr}, nil
 	}
 
+	fmt.Println(color.Magenta("Track only host metrics"))
 	fmt.Println("")
 	return 0, "", option{}, nil
 }
