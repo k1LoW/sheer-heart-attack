@@ -31,7 +31,7 @@ func optionProcess(pid int32, name string, nonInteractive bool) (int32, string, 
 	fmt.Printf("%s ... %s\n", color.Magenta("--name", color.B), "name of the process.")
 	fmt.Println("")
 
-	processStr = prompter.Prompt("Enter PID or name of the process", processStr)
+	processStr = prompter.Prompt("Enter PID or name of the process (If empty, sheer-heart-atack track only host metrics)", processStr)
 
 	pidInt64, err := strconv.ParseInt(processStr, 10, 32)
 	if err == nil {
