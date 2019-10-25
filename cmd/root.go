@@ -29,6 +29,7 @@ import (
 
 var (
 	pid          int32
+	name         string
 	threshold    string
 	attempts     int
 	command      string
