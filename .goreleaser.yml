@@ -36,3 +36,18 @@ snapshot:
   name_template: "{{ .Version }}-next"
 changelog:
   skip: true
+nfpms:
+  -
+    id: shigechee-nfpms
+    name_template: "{{ .ProjectName }}_{{ .Version }}-1_{{ .Arch }}"
+    builds:
+    - shigechee-linux
+    homepage: https://github.com/k1LoW/sheer-heart-attack
+    maintainer: Ken'ichiro Oyama <k1lowxb@gmail.com>
+    description: sheer-heart-attack is a debugging tool that can execute any command on process/host metrics trigger.
+    license: MIT
+    formats:
+      - deb
+      - rpm
+    bindir: /usr/bin
+    epoch: 1
