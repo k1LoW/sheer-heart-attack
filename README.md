@@ -86,7 +86,6 @@ For example, you can set the threshold as follows
 | `proc_rss` | Non-swapped physical memory the process uses (bytes). |
 | `proc_vms` | Amount of virtual memory the process uses (bytes). |
 | `proc_swap` | Amount of memory that has been swapped out to disk the process uses (bytes). |
-| `proc_connections` | Amount of connections(TCP, UDP or UNIX) the process uses. |
 | `proc_open_files` | Amount of files and file discripters opend by the process. **linux only** |
 | `cpu` | Percentage of cpu used. |
 | `mem` | Percentage of RAM used. |
