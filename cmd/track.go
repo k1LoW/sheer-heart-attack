@@ -174,8 +174,8 @@ var trackCmd = &cobra.Command{
 				if exceeded >= attempts {
 					sg.Add(1)
 					go func(ctx context.Context) {
-						executtionTimeout := interval * 3
-						stdout, stderr, err := execute(ctx, command, envs, executtionTimeout)
+						executionTimeout := interval * 3
+						stdout, stderr, err := execute(ctx, command, envs, executionTimeout)
 						executed++
 						exceeded = 0
 						fields := []zap.Field{

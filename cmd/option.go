@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"time"
 
 	"github.com/Songmu/prompter"
 	"github.com/k1LoW/metr/metrics"
@@ -14,7 +15,7 @@ import (
 
 type option []string
 
-const collectInterval = 500
+const collectInterval = time.Duration(500) * time.Millisecond
 
 // optionProcess ...
 func optionProcess(pid int32, name string, nonInteractive bool) (int32, string, option, error) {
