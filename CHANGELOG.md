@@ -1,5 +1,11 @@
 # Changelog
 
+## [v3.0.0](https://github.com/k1LoW/sheer-heart-attack/compare/v2.0.0...v3.0.0) (2019-10-28)
+
+* Use GitHub Actions [#24](https://github.com/k1LoW/sheer-heart-attack/pull/24) ([k1LoW](https://github.com/k1LoW))
+* Fix interval for get metrics [#23](https://github.com/k1LoW/sheer-heart-attack/pull/23) ([k1LoW](https://github.com/k1LoW))
+* [BREAKING] Add `--name` option to select processes using process name / Allow do not select process [#22](https://github.com/k1LoW/sheer-heart-attack/pull/22) ([k1LoW](https://github.com/k1LoW))
+
 ## [v2.0.0](https://github.com/k1LoW/sheer-heart-attack/compare/v1.3.0...v2.0.0) (2019-08-09)
 
 * [BREAKING] Use github.com/k1LoW/metr [#21](https://github.com/k1LoW/sheer-heart-attack/pull/21) ([k1LoW](https://github.com/k1LoW))
