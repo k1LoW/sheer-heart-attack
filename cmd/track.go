@@ -43,7 +43,8 @@ import (
 const (
 	startMessage         = "Tracking start"
 	timeoutMessage       = "Tracking timeout"
-	executeMessage       = "Execute command"
+	executeMessage       = "Threshold exceeded and execute command"
+	noExecuteMessage     = "Threshold exceeded ( no command )"
 	endMessage           = "Tracking ended"
 	errorMessage         = "Error"
 	executeFailedMessage = "Failed to execute command"
@@ -175,21 +176,26 @@ var trackCmd = &cobra.Command{
 				if exceeded >= attempts {
 					sg.Add(1)
 					go func(ctx context.Context) {
-						executionTimeout := interval * 3
-						stdout, stderr, err := execute(ctx, command, envs, executionTimeout)
-						executed++
-						exceeded = 0
-						fields := []zap.Field{
-							zap.ByteString("stdout", stdout),
-							zap.ByteString("stderr", stderr),
-						}
+						fields := []zap.Field{}
 						m.Each(func(metric metrics.Metric, value interface{}) {
 							fields = append(fields, zap.Any(metric.Name, value))
 						})
-						l.Info(executeMessage, fields...)
-						if err != nil {
-							l.Error(executeFailedMessage, zap.Error(err))
-							// do not break
+						if command != "" {
+							executionTimeout := interval * 3
+							stdout, stderr, err := execute(ctx, command, envs, executionTimeout)
+							executed++
+							exceeded = 0
+							fields = []zap.Field{
+								zap.ByteString("stdout", stdout),
+								zap.ByteString("stderr", stderr),
+							}
+							l.Info(executeMessage, fields...)
+							if err != nil {
+								l.Error(executeFailedMessage, zap.Error(err))
+								// do not break
+							}
+						} else {
+							l.Info(noExecuteMessage, fields...)
 						}
 						sg.Done()
 					}(ctx)
