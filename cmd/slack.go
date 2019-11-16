@@ -50,9 +50,14 @@ func notifySlack(webhookURL string, slackChannel string, slackMention string, tr
 		for _, f := range trackFields {
 			switch f.key {
 			case "command":
+				c := cast.ToString(f.value)
+				v := fmt.Sprintf("```%s```", c)
+				if c == "" {
+					v = "-"
+				}
 				attachment.AddField(&slack.Field{
 					Title: fmt.Sprintf("--%s", f.key),
-					Value: fmt.Sprintf("```%s```", cast.ToString(f.value)),
+					Value: v,
 					Short: false,
 				})
 			case "hostname":
