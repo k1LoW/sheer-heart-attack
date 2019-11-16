@@ -183,8 +183,6 @@ var trackCmd = &cobra.Command{
 						if command != "" {
 							executionTimeout := interval * 3
 							stdout, stderr, err := execute(ctx, command, envs, executionTimeout)
-							executed++
-							exceeded = 0
 							fields = []zap.Field{
 								zap.ByteString("stdout", stdout),
 								zap.ByteString("stderr", stderr),
@@ -197,6 +195,8 @@ var trackCmd = &cobra.Command{
 						} else {
 							l.Info(noExecuteMessage, fields...)
 						}
+						executed++
+						exceeded = 0
 						sg.Done()
 					}(ctx)
 				}
