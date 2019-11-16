@@ -48,74 +48,25 @@ var launchCmd = &cobra.Command{
 
 		trackCommand := []string{exe, "track"}
 
-		o := options.NewOptions()
+		o, err := options.NewOptions(
+			pid,
+			name,
+			threshold,
+			interval,
+			attempts,
+			command,
+			times,
+			timeout,
+			slackChannel,
+			slackMention,
+			nonInteractive,
+		)
+		if err != nil {
+			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
+			os.Exit(1)
+		}
 
-		// pid or name or none
-		pid, name, optProcess, err := o.OptionProcess(pid, name, nonInteractive)
-		if err != nil {
-			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
-			os.Exit(1)
-		}
-		trackCommand = append(trackCommand, optProcess...)
-
-		// threshold
-		optThreshold, err := o.OptionThreshold(threshold, pid, name, nonInteractive)
-		if err != nil {
-			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
-			os.Exit(1)
-		}
-		trackCommand = append(trackCommand, optThreshold...)
-		// interval
-		optInterval, err := o.OptionInterval(interval, nonInteractive)
-		if err != nil {
-			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
-			os.Exit(1)
-		}
-		trackCommand = append(trackCommand, optInterval...)
-		// attempts
-		optAttempts, err := o.OptionAttempts(attempts, nonInteractive)
-		if err != nil {
-			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
-			os.Exit(1)
-		}
-		trackCommand = append(trackCommand, optAttempts...)
-		// command
-		optCommand, err := o.OptionCommand(command, nonInteractive)
-		if err != nil {
-			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
-			os.Exit(1)
-		}
-		trackCommand = append(trackCommand, optCommand...)
-		// times
-		optTimes, err := o.OptionTimes(times, nonInteractive)
-		if err != nil {
-			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
-			os.Exit(1)
-		}
-		trackCommand = append(trackCommand, optTimes...)
-		// timeout
-		optTimeout, err := o.OptionTimeout(timeout, nonInteractive)
-		if err != nil {
-			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
-			os.Exit(1)
-		}
-		trackCommand = append(trackCommand, optTimeout...)
-		// slack-channel
-		optSlackChannel, err := o.OptionSlackChannel(slackChannel, nonInteractive)
-		if err != nil {
-			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
-			os.Exit(1)
-		}
-		trackCommand = append(trackCommand, optSlackChannel...)
-		// slack-mention
-		if len(optSlackChannel) == 2 && optSlackChannel[1] != "" {
-			optSlackMention, err := o.OptionSlackMention(slackMention, nonInteractive)
-			if err != nil {
-				_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
-				os.Exit(1)
-			}
-			trackCommand = append(trackCommand, optSlackMention...)
-		}
+		trackCommand = append(trackCommand, o.Get()...)
 
 		envs := os.Environ()
 		c := exec.Command(trackCommand[0], trackCommand[1:]...)

@@ -16,22 +16,86 @@ import (
 const CollectInterval = time.Duration(500) * time.Millisecond
 
 type Options struct {
-	options []string
+	nonInteractive bool
+	options        []string
 }
 
-type options []string
-
-// NewOption ...
-func NewOptions() *Options {
-	return &Options{
-		options: []string{},
+// NewOptions ...
+func NewOptions(
+	pid int32,
+	name string,
+	threshold string,
+	interval int,
+	attempts int,
+	command string,
+	times int,
+	timeout int,
+	slackChannel string,
+	slackMention string,
+	nonInteractive bool,
+) (*Options, error) {
+	o := &Options{
+		nonInteractive: nonInteractive,
+		options:        []string{},
 	}
+	pid, name, err := o.Process(pid, name)
+	if err != nil {
+		return o, err
+	}
+	err = o.Threshold(threshold, pid, name)
+	if err != nil {
+		return o, err
+	}
+	err = o.Interval(interval)
+	if err != nil {
+		return o, err
+	}
+	err = o.Attempts(attempts)
+	if err != nil {
+		return o, err
+	}
+	err = o.Command(command)
+	if err != nil {
+		return o, err
+	}
+	err = o.Times(times)
+	if err != nil {
+		return o, err
+	}
+	err = o.Timeout(timeout)
+	if err != nil {
+		return o, err
+	}
+	slackChannel, err = o.SlackChannel(slackChannel)
+	if err != nil {
+		return o, err
+	}
+	if slackChannel != "" {
+		err := o.SlackMention(slackMention)
+		if err != nil {
+			return o, err
+		}
+	}
+	return o, nil
+
 }
 
-// optionProcess ...
-func (o *Options) OptionProcess(pid int32, name string, nonInteractive bool) (int32, string, options, error) {
+func (o *Options) Get() []string {
+	return o.options
+}
+
+func (o *Options) Process(pid int32, name string) (int32, string, error) {
 	if pid > 0 && name != "" {
-		return pid, name, options{}, errors.New("you can only use either --pid or --name")
+		return pid, name, errors.New("you can only use either --pid or --name")
+	}
+	if o.nonInteractive {
+		if pid > 0 {
+			o.options = append(o.options, []string{"--pid", strconv.Itoa(int(pid))}...)
+		}
+		if name != "" {
+			o.options = append(o.options, []string{"--name", name}...)
+		}
+		return pid, name, nil
 	}
 
 	processStr := strconv.Itoa(int(pid))
@@ -51,34 +115,36 @@ func (o *Options) OptionProcess(pid int32, name string, nonInteractive bool) (in
 		p, err := process.NewProcess(pid)
 		if err != nil {
 			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
-			return o.OptionProcess(pid, name, nonInteractive)
+			return o.Process(pid, name)
 		}
 		name, err = p.Name()
 		if err != nil || name == "" {
 			_, _ = fmt.Fprintf(os.Stderr, "No process found: %d\n", pid)
-			return o.OptionProcess(pid, name, nonInteractive)
+			return o.Process(pid, name)
 		}
 
 		fmt.Printf("Target process name: %s\n", color.Magenta(name))
 		fmt.Println("")
-		return pid, "", options{"--pid", processStr}, nil
+		o.options = append(o.options, []string{"--pid", processStr}...)
+		return pid, "", nil
 	}
 
 	if processStr != "" {
 		fmt.Printf("Target process name: %s\n", color.Magenta(processStr))
 		fmt.Println("")
-		return 0, processStr, options{"--name", processStr}, nil
+		o.options = append(o.options, []string{"--pid", processStr}...)
+		return 0, processStr, nil
 	}
 
 	fmt.Println(color.Magenta("Track only host metrics"))
 	fmt.Println("")
-	return 0, "", options{}, nil
+	return 0, "", nil
 }
 
-// optionThreshold ...
-func (o *Options) OptionThreshold(threshold string, pid int32, name string, nonInteractive bool) (options, error) {
-	if nonInteractive {
-		return options{"--threshold", threshold}, nil
+func (o *Options) Threshold(threshold string, pid int32, name string) error {
+	if o.nonInteractive {
+		o.options = append(o.options, []string{"--threshold", threshold}...)
+		return nil
 	}
 	var (
 		m   *metrics.Metrics
@@ -89,17 +155,17 @@ func (o *Options) OptionThreshold(threshold string, pid int32, name string, nonI
 	case pid > 0:
 		m, err = metrics.GetMetrics(CollectInterval, pid)
 		if err != nil {
-			return options{}, err
+			return err
 		}
 	case name != "":
 		m, err = metrics.GetMetricsByName(CollectInterval, name)
 		if err != nil {
-			return options{}, err
+			return err
 		}
 	default:
 		m, err = metrics.GetMetrics(CollectInterval)
 		if err != nil {
-			return options{}, err
+			return err
 		}
 	}
 
@@ -116,39 +182,44 @@ func (o *Options) OptionThreshold(threshold string, pid int32, name string, nonI
 	fmt.Println("")
 	threshold = prompter.Prompt("Enter threshold", threshold)
 	fmt.Println("")
-	return options{"--threshold", threshold}, nil
+	o.options = append(o.options, []string{"--threshold", threshold}...)
+	return nil
 }
 
-// optionInterval ...
-func (o *Options) OptionInterval(interval int, nonInteractive bool) (options, error) {
+func (o *Options) Interval(interval int) error {
 	intervalStr := strconv.Itoa(interval)
-	if nonInteractive {
-		return options{"--interval", intervalStr}, nil
+	if o.nonInteractive {
+		o.options = append(o.options, []string{"--interval", intervalStr}...)
+		return nil
 	}
 	fmt.Printf("%s ... %s\n", color.Magenta("--interval", color.B), "Interval of checking if the threshold exceeded (seconds).")
 	fmt.Println("")
 	intervalStr = prompter.Prompt("Enter interval", intervalStr)
 	fmt.Println("")
-	return options{"--interval", intervalStr}, nil
+	o.options = append(o.options, []string{"--interval", intervalStr}...)
+	return nil
 }
 
-// optionAttempts ...
-func (o *Options) OptionAttempts(attempts int, nonInteractive bool) (options, error) {
+func (o *Options) Attempts(attempts int) error {
 	attemptsStr := strconv.Itoa(attempts)
-	if nonInteractive {
-		return options{"--attempts", attemptsStr}, nil
+	if o.nonInteractive {
+		o.options = append(o.options, []string{"--attempts", attemptsStr}...)
+		return nil
 	}
 	fmt.Printf("%s ... %s\n", color.Magenta("--attempts", color.B), "Maximum number of attempts continuously exceeding the threshold.")
 	fmt.Println("")
 	attemptsStr = prompter.Prompt("Enter attempts", attemptsStr)
 	fmt.Println("")
-	return options{"--attempts", attemptsStr}, nil
+	o.options = append(o.options, []string{"--attempts", attemptsStr}...)
+	return nil
 }
 
-// optionCommand ...
-func (o *Options) OptionCommand(command string, nonInteractive bool) (options, error) {
-	if nonInteractive {
-		return options{"--command", command}, nil
+func (o *Options) Command(command string) error {
+	if o.nonInteractive {
+		if command != "" {
+			o.options = append(o.options, []string{"--command", command}...)
+		}
+		return nil
 	}
 	fmt.Printf("%s ... %s\n", color.Magenta("--command", color.B), "Command to execute when the maximum number of attempts is exceeded.execution. If command execution time > 'interval' * 3, kill command.")
 	fmt.Println("")
@@ -157,43 +228,46 @@ func (o *Options) OptionCommand(command string, nonInteractive bool) (options, e
 	fmt.Println("")
 	command = prompter.Prompt("Enter command", command)
 	fmt.Println("")
-	return options{"--command", command}, nil
+	if command != "" {
+		o.options = append(o.options, []string{"--command", command}...)
+	}
+	return nil
 }
 
-// optionTimes ...
-func (o *Options) OptionTimes(times int, nonInteractive bool) (options, error) {
+func (o *Options) Times(times int) error {
 	timesStr := strconv.Itoa(times)
-	if nonInteractive {
-		return options{"--times", timesStr}, nil
+	if o.nonInteractive {
+		o.options = append(o.options, []string{"--times", timesStr}...)
+		return nil
 	}
 	fmt.Printf("%s ... %s\n", color.Magenta("--times", color.B), "Maximum number of command executions. If times < 1, track and execute until timeout.")
 	fmt.Println("")
 	timesStr = prompter.Prompt("Enter times", strconv.Itoa(times))
 	fmt.Println("")
-	return options{"--times", timesStr}, nil
+	o.options = append(o.options, []string{"--times", timesStr}...)
+	return nil
 }
 
-// optionTimeout ...
-func (o *Options) OptionTimeout(timeout int, nonInteractive bool) (options, error) {
+func (o *Options) Timeout(timeout int) error {
 	timeoutStr := strconv.Itoa(timeout)
-	if nonInteractive {
-		return options{"--timeout", timeoutStr}, nil
+	if o.nonInteractive {
+		o.options = append(o.options, []string{"--timeout", timeoutStr}...)
+		return nil
 	}
 	fmt.Printf("%s ... %s\n", color.Magenta("--timeout", color.B), "Timeout of tracking (seconds).")
 	fmt.Println("")
 	timeoutStr = prompter.Prompt("Enter timeout", timeoutStr)
 	fmt.Println("")
-	return options{"--timeout", timeoutStr}, nil
+	o.options = append(o.options, []string{"--timeout", timeoutStr}...)
+	return nil
 }
 
-// optionSlackChannel ...
-func (o *Options) OptionSlackChannel(slackChannel string, nonInteractive bool) (options, error) {
-	if nonInteractive {
-		if slackChannel == "" {
-			return options{}, nil
-		} else {
-			return options{"--slack-channel", slackChannel}, nil
+func (o *Options) SlackChannel(slackChannel string) (string, error) {
+	if o.nonInteractive {
+		if slackChannel != "" {
+			o.options = append(o.options, []string{"--slack-channel", slackChannel}...)
 		}
+		return slackChannel, nil
 	}
 	fmt.Printf("%s ... %s\n", color.Magenta("--slack-channel", color.B), "Slack channel to notify.")
 	fmt.Println("")
@@ -205,32 +279,33 @@ func (o *Options) OptionSlackChannel(slackChannel string, nonInteractive bool) (
 	yn := prompter.YN("Do you want to notify slack channel?", true)
 	if !yn {
 		fmt.Println("")
-		return options{}, nil
+		return "", nil
 	}
 	if urlErr != nil {
 		_, _ = fmt.Fprintf(os.Stderr, "%s\n", urlErr)
 		url = prompter.Prompt("Enter slack incoming webhook URL", "")
 		if url == "" {
 			_, _ = fmt.Fprintf(os.Stderr, "%s\n", errors.New("invalid URL"))
-			return o.OptionSlackChannel(slackChannel, nonInteractive)
+			return o.SlackChannel(slackChannel)
 		}
 		err := os.Setenv("SLACK_INCOMMING_WEBHOOK_URL", url)
 		if err != nil {
-			return options{}, err
+			return "", err
 		}
 	}
 	slackChannel = prompter.Prompt("Enter slack channel", slackChannel)
 	fmt.Println("")
-	return options{"--slack-channel", slackChannel}, nil
+	o.options = append(o.options, []string{"--slack-channel", slackChannel}...)
+	return slackChannel, nil
 }
 
-// optionSlackMention ...
-func (o *Options) OptionSlackMention(slackMention string, nonInteractive bool) (options, error) {
-	if nonInteractive {
+func (o *Options) SlackMention(slackMention string) error {
+	if o.nonInteractive {
 		if slackMention == "" {
-			return options{}, nil
+			return nil
 		} else {
-			return options{"--slack-mention", slackMention}, nil
+			o.options = append(o.options, []string{"--slack-mention", slackMention}...)
+			return nil
 		}
 	}
 	fmt.Printf("%s ... %s\n", color.Magenta("--slack-mention", color.B), "Slack mention.")
@@ -238,11 +313,12 @@ func (o *Options) OptionSlackMention(slackMention string, nonInteractive bool) (
 	yn := prompter.YN("Do you want to mention?", true)
 	if !yn {
 		fmt.Println("")
-		return options{}, nil
+		return nil
 	}
 	slackMention = prompter.Prompt("Enter mention [@here or user_id (ex. @UXXXXXXXX)]", slackMention)
 	fmt.Println("")
-	return options{"--slack-mention", slackMention}, nil
+	o.options = append(o.options, []string{"--slack-mention", slackMention}...)
+	return nil
 }
 
 // GetEnvSlackIncommingWebhook return slack incomming webhook URL via os.Envirion
