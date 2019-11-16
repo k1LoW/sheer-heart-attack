@@ -168,7 +168,7 @@ func optionTimeout(timeout int, nonInteractive bool) (option, error) {
 	if nonInteractive {
 		return option{"--timeout", timeoutStr}, nil
 	}
-	fmt.Printf("%s ... %s\n", color.Magenta("--tineout", color.B), "Timeout of tracking (seconds).")
+	fmt.Printf("%s ... %s\n", color.Magenta("--timeout", color.B), "Timeout of tracking (seconds).")
 	fmt.Println("")
 	timeoutStr = prompter.Prompt("Enter timeout", timeoutStr)
 	fmt.Println("")
