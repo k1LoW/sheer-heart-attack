@@ -38,40 +38,40 @@ func NewOptions(
 		nonInteractive: nonInteractive,
 		options:        []string{},
 	}
-	pid, name, err := o.Process(pid, name)
+	pid, name, err := o.process(pid, name)
 	if err != nil {
 		return o, err
 	}
-	err = o.Threshold(threshold, pid, name)
+	err = o.threshold(threshold, pid, name)
 	if err != nil {
 		return o, err
 	}
-	err = o.Interval(interval)
+	err = o.interval(interval)
 	if err != nil {
 		return o, err
 	}
-	err = o.Attempts(attempts)
+	err = o.attempts(attempts)
 	if err != nil {
 		return o, err
 	}
-	err = o.Command(command)
+	err = o.command(command)
 	if err != nil {
 		return o, err
 	}
-	err = o.Times(times)
+	err = o.times(times)
 	if err != nil {
 		return o, err
 	}
-	err = o.Timeout(timeout)
+	err = o.timeout(timeout)
 	if err != nil {
 		return o, err
 	}
-	slackChannel, err = o.SlackChannel(slackChannel)
+	slackChannel, err = o.slackChannel(slackChannel)
 	if err != nil {
 		return o, err
 	}
 	if slackChannel != "" {
-		err := o.SlackMention(slackMention)
+		err := o.slackMention(slackMention)
 		if err != nil {
 			return o, err
 		}
@@ -84,7 +84,7 @@ func (o *Options) Get() []string {
 	return o.options
 }
 
-func (o *Options) Process(pid int32, name string) (int32, string, error) {
+func (o *Options) process(pid int32, name string) (int32, string, error) {
 	if pid > 0 && name != "" {
 		return pid, name, errors.New("you can only use either --pid or --name")
 	}
@@ -115,12 +115,12 @@ func (o *Options) Process(pid int32, name string) (int32, string, error) {
 		p, err := process.NewProcess(pid)
 		if err != nil {
 			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
-			return o.Process(pid, name)
+			return o.process(pid, name)
 		}
 		name, err = p.Name()
 		if err != nil || name == "" {
 			_, _ = fmt.Fprintf(os.Stderr, "No process found: %d\n", pid)
-			return o.Process(pid, name)
+			return o.process(pid, name)
 		}
 
 		fmt.Printf("Target process name: %s\n", color.Magenta(name))
@@ -141,7 +141,7 @@ func (o *Options) Process(pid int32, name string) (int32, string, error) {
 	return 0, "", nil
 }
 
-func (o *Options) Threshold(threshold string, pid int32, name string) error {
+func (o *Options) threshold(threshold string, pid int32, name string) error {
 	if o.nonInteractive {
 		o.options = append(o.options, []string{"--threshold", threshold}...)
 		return nil
@@ -186,7 +186,7 @@ func (o *Options) Threshold(threshold string, pid int32, name string) error {
 	return nil
 }
 
-func (o *Options) Interval(interval int) error {
+func (o *Options) interval(interval int) error {
 	intervalStr := strconv.Itoa(interval)
 	if o.nonInteractive {
 		o.options = append(o.options, []string{"--interval", intervalStr}...)
@@ -196,11 +196,12 @@ func (o *Options) Interval(interval int) error {
 	fmt.Println("")
 	intervalStr = prompter.Prompt("Enter interval", intervalStr)
 	fmt.Println("")
+
 	o.options = append(o.options, []string{"--interval", intervalStr}...)
 	return nil
 }
 
-func (o *Options) Attempts(attempts int) error {
+func (o *Options) attempts(attempts int) error {
 	attemptsStr := strconv.Itoa(attempts)
 	if o.nonInteractive {
 		o.options = append(o.options, []string{"--attempts", attemptsStr}...)
@@ -214,7 +215,7 @@ func (o *Options) Attempts(attempts int) error {
 	return nil
 }
 
-func (o *Options) Command(command string) error {
+func (o *Options) command(command string) error {
 	if o.nonInteractive {
 		if command != "" {
 			o.options = append(o.options, []string{"--command", command}...)
@@ -234,7 +235,7 @@ func (o *Options) Command(command string) error {
 	return nil
 }
 
-func (o *Options) Times(times int) error {
+func (o *Options) times(times int) error {
 	timesStr := strconv.Itoa(times)
 	if o.nonInteractive {
 		o.options = append(o.options, []string{"--times", timesStr}...)
@@ -248,7 +249,7 @@ func (o *Options) Times(times int) error {
 	return nil
 }
 
-func (o *Options) Timeout(timeout int) error {
+func (o *Options) timeout(timeout int) error {
 	timeoutStr := strconv.Itoa(timeout)
 	if o.nonInteractive {
 		o.options = append(o.options, []string{"--timeout", timeoutStr}...)
@@ -262,7 +263,7 @@ func (o *Options) Timeout(timeout int) error {
 	return nil
 }
 
-func (o *Options) SlackChannel(slackChannel string) (string, error) {
+func (o *Options) slackChannel(slackChannel string) (string, error) {
 	if o.nonInteractive {
 		if slackChannel != "" {
 			o.options = append(o.options, []string{"--slack-channel", slackChannel}...)
@@ -286,7 +287,7 @@ func (o *Options) SlackChannel(slackChannel string) (string, error) {
 		url = prompter.Prompt("Enter slack incoming webhook URL", "")
 		if url == "" {
 			_, _ = fmt.Fprintf(os.Stderr, "%s\n", errors.New("invalid URL"))
-			return o.SlackChannel(slackChannel)
+			return o.slackChannel(slackChannel)
 		}
 		err := os.Setenv("SLACK_INCOMMING_WEBHOOK_URL", url)
 		if err != nil {
@@ -299,7 +300,7 @@ func (o *Options) SlackChannel(slackChannel string) (string, error) {
 	return slackChannel, nil
 }
 
-func (o *Options) SlackMention(slackMention string) error {
+func (o *Options) slackMention(slackMention string) error {
 	if o.nonInteractive {
 		if slackMention == "" {
 			return nil
