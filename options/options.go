@@ -15,6 +15,7 @@ import (
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"github.com/shirou/gopsutil/process"
 	"golang.org/x/text/language"
+	"golang.org/x/text/language/display"
 )
 
 const CollectInterval = time.Duration(500) * time.Millisecond
@@ -58,6 +59,9 @@ func NewOptions(
 		bundle.MustParseMessageFileBytes(d, path)
 	}
 	matched, _, _ := matcher.Match(language.Make(lang))
+
+	fmt.Printf("Detected language: %s\n", color.Magenta(display.English.Tags().Name(matched)))
+	fmt.Println("")
 
 	o := &Options{
 		nonInteractive: nonInteractive,
