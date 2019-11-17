@@ -1,5 +1,11 @@
 # Changelog
 
+## [v3.1.0](https://github.com/k1LoW/sheer-heart-attack/compare/v3.0.0...v3.1.0) (2019-11-18)
+
+* Add i18n [#27](https://github.com/k1LoW/sheer-heart-attack/pull/27) ([k1LoW](https://github.com/k1LoW))
+* Allow empty command [#26](https://github.com/k1LoW/sheer-heart-attack/pull/26) ([k1LoW](https://github.com/k1LoW))
+* Fix: times/timeout are not logged [#25](https://github.com/k1LoW/sheer-heart-attack/pull/25) ([k1LoW](https://github.com/k1LoW))
+
 ## [v3.0.0](https://github.com/k1LoW/sheer-heart-attack/compare/v2.0.0...v3.0.0) (2019-10-28)
 
 * Use GitHub Actions [#24](https://github.com/k1LoW/sheer-heart-attack/pull/24) ([k1LoW](https://github.com/k1LoW))
