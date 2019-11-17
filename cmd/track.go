@@ -34,6 +34,7 @@ import (
 	"github.com/k1LoW/exec"
 	"github.com/k1LoW/metr/metrics"
 	"github.com/k1LoW/sheer-heart-attack/logger"
+	"github.com/k1LoW/sheer-heart-attack/options"
 	"github.com/mattn/go-isatty"
 	"github.com/shirou/gopsutil/process"
 	"github.com/spf13/cobra"
@@ -116,7 +117,7 @@ var trackCmd = &cobra.Command{
 		}
 
 		if slackChannel != "" {
-			webhookURL, err := GetEnvSlackIncommingWebhook()
+			webhookURL, err := options.GetEnvSlackIncommingWebhook()
 			if err != nil {
 				_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
 				os.Exit(1)
@@ -145,19 +146,19 @@ var trackCmd = &cobra.Command{
 				)
 				switch {
 				case pid > 0:
-					m, err = metrics.GetMetrics(collectInterval, pid)
+					m, err = metrics.GetMetrics(options.CollectInterval, pid)
 					if err != nil {
 						l.Error(errorMessage, zap.Error(err))
 						break L
 					}
 				case name != "":
-					m, err = metrics.GetMetricsByName(collectInterval, name)
+					m, err = metrics.GetMetricsByName(options.CollectInterval, name)
 					if err != nil {
 						l.Error(errorMessage, zap.Error(err))
 						break L
 					}
 				default:
-					m, err = metrics.GetMetrics(collectInterval)
+					m, err = metrics.GetMetrics(options.CollectInterval)
 					if err != nil {
 						l.Error(errorMessage, zap.Error(err))
 						break L

@@ -24,9 +24,12 @@ sec:
 	gosec ./...
 
 build:
+	packr2
 	go build -ldflags="$(BUILD_LDFLAGS)"
+	packr2 clean
 
 depsdev:
+	go get github.com/gobuffalo/packr/v2/packr2
 	go get golang.org/x/tools/cmd/cover
 	go get golang.org/x/lint/golint
 	go get github.com/linyows/git-semv/cmd/git-semv

@@ -4,7 +4,10 @@ before:
     - go mod tidy
 builds:
 -
-  id: shigechee-darwin
+  id: killer-q-darwin
+  hooks:
+    pre: packr2
+    post: packr2 clean
   env:
   - CGO_ENABLED=1
   goos:
@@ -14,7 +17,10 @@ builds:
   ldflags:
     - -s -w -X github.com/k1LoW/sheer-heart-attack.version={{.Version}} -X github.com/k1LoW/sheer-heart-attack.commit={{.FullCommit}} -X github.com/k1LoW/sheer-heart-attack.date={{.Date}} -X github.com/k1LoW/sheer-heart-attack/version.Version={{.Version}}
 -
-  id: shigechee-linux
+  id: killer-q-linux
+  hooks:
+    pre: packr2
+    post: packr2 clean
   env:
   - CGO_ENABLED=0
   goos:
@@ -25,7 +31,7 @@ builds:
     - -s -w -X github.com/k1LoW/sheer-heart-attack.version={{.Version}} -X github.com/k1LoW/sheer-heart-attack.commit={{.FullCommit}} -X github.com/k1LoW/sheer-heart-attack.date={{.Date}} -X github.com/k1LoW/sheer-heart-attack/version.Version={{.Version}}
 archives:
 -
-  id: shigechee-archive
+  id: killer-q-archive
   name_template: '{{ .ProjectName }}_v{{ .Version }}_{{ .Os }}_{{ .Arch }}{{ if .Arm }}v{{ .Arm }}{{ end }}'
   format_overrides:
     - goos: darwin
@@ -38,10 +44,10 @@ changelog:
   skip: true
 nfpms:
   -
-    id: shigechee-nfpms
+    id: killer-q-nfpms
     name_template: "{{ .ProjectName }}_{{ .Version }}-1_{{ .Arch }}"
     builds:
-    - shigechee-linux
+    - killer-q-linux
     homepage: https://github.com/k1LoW/sheer-heart-attack
     maintainer: Ken'ichiro Oyama <k1lowxb@gmail.com>
     description: sheer-heart-attack is a debugging tool that can execute any command on process/host metrics trigger.

@@ -26,12 +26,16 @@ import (
 	"strings"
 
 	"github.com/k1LoW/exec"
+	"github.com/k1LoW/sheer-heart-attack/options"
 
 	"github.com/labstack/gommon/color"
 	"github.com/spf13/cobra"
 )
 
-var nonInteractive bool
+var (
+	nonInteractive bool
+	lang           string
+)
 
 // launchCmd represents the launch command
 var launchCmd = &cobra.Command{
@@ -46,73 +50,26 @@ var launchCmd = &cobra.Command{
 		}
 
 		trackCommand := []string{exe, "track"}
+		o, err := options.NewOptions(
+			pid,
+			name,
+			threshold,
+			interval,
+			attempts,
+			command,
+			times,
+			timeout,
+			slackChannel,
+			slackMention,
+			nonInteractive,
+			lang,
+		)
+		if err != nil {
+			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
+			os.Exit(1)
+		}
 
-		// pid or name or none
-		pid, name, optProcess, err := optionProcess(pid, name, nonInteractive)
-		if err != nil {
-			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
-			os.Exit(1)
-		}
-		trackCommand = append(trackCommand, optProcess...)
-
-		// threshold
-		optThreshold, err := optionThreshold(threshold, pid, name, nonInteractive)
-		if err != nil {
-			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
-			os.Exit(1)
-		}
-		trackCommand = append(trackCommand, optThreshold...)
-		// interval
-		optInterval, err := optionInterval(interval, nonInteractive)
-		if err != nil {
-			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
-			os.Exit(1)
-		}
-		trackCommand = append(trackCommand, optInterval...)
-		// attempts
-		optAttempts, err := optionAttempts(attempts, nonInteractive)
-		if err != nil {
-			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
-			os.Exit(1)
-		}
-		trackCommand = append(trackCommand, optAttempts...)
-		// command
-		optCommand, err := optionCommand(command, nonInteractive)
-		if err != nil {
-			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
-			os.Exit(1)
-		}
-		trackCommand = append(trackCommand, optCommand...)
-		// times
-		optTimes, err := optionTimes(times, nonInteractive)
-		if err != nil {
-			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
-			os.Exit(1)
-		}
-		trackCommand = append(trackCommand, optTimes...)
-		// timeout
-		optTimeout, err := optionTimeout(timeout, nonInteractive)
-		if err != nil {
-			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
-			os.Exit(1)
-		}
-		trackCommand = append(trackCommand, optTimeout...)
-		// slack-channel
-		optSlackChannel, err := optionSlackChannel(slackChannel, nonInteractive)
-		if err != nil {
-			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
-			os.Exit(1)
-		}
-		trackCommand = append(trackCommand, optSlackChannel...)
-		// slack-mention
-		if len(optSlackChannel) == 2 && optSlackChannel[1] != "" {
-			optSlackMention, err := optionSlackMention(slackMention, nonInteractive)
-			if err != nil {
-				_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
-				os.Exit(1)
-			}
-			trackCommand = append(trackCommand, optSlackMention...)
-		}
+		trackCommand = append(trackCommand, o.Get()...)
 
 		envs := os.Environ()
 		c := exec.Command(trackCommand[0], trackCommand[1:]...)
@@ -145,4 +102,5 @@ func init() {
 	launchCmd.Flags().IntVarP(&timeout, "timeout", "", 60*60*24, "Timeout of tracking (seconds)")
 	launchCmd.Flags().StringVarP(&slackChannel, "slack-channel", "", "", "Slack channel to notify")
 	launchCmd.Flags().StringVarP(&slackMention, "slack-mention", "", "", "Slack mention")
+	launchCmd.Flags().StringVarP(&lang, "lang", "", os.Getenv("LANG"), "Language")
 }
