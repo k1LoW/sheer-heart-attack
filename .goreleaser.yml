@@ -5,6 +5,9 @@ before:
 builds:
 -
   id: shigechee-darwin
+  hooks:
+    pre: packr2
+    post: packr2 clean
   env:
   - CGO_ENABLED=1
   goos:
@@ -15,6 +18,9 @@ builds:
     - -s -w -X github.com/k1LoW/sheer-heart-attack.version={{.Version}} -X github.com/k1LoW/sheer-heart-attack.commit={{.FullCommit}} -X github.com/k1LoW/sheer-heart-attack.date={{.Date}} -X github.com/k1LoW/sheer-heart-attack/version.Version={{.Version}}
 -
   id: shigechee-linux
+  hooks:
+    pre: packr2
+    post: packr2 clean
   env:
   - CGO_ENABLED=0
   goos:
