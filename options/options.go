@@ -7,10 +7,14 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/BurntSushi/toml"
 	"github.com/Songmu/prompter"
+	"github.com/gobuffalo/packr/v2"
 	"github.com/k1LoW/metr/metrics"
 	"github.com/labstack/gommon/color"
+	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"github.com/shirou/gopsutil/process"
+	"golang.org/x/text/language"
 )
 
 const CollectInterval = time.Duration(500) * time.Millisecond
@@ -18,7 +22,14 @@ const CollectInterval = time.Duration(500) * time.Millisecond
 type Options struct {
 	nonInteractive bool
 	options        []string
+	localizer      *i18n.Localizer
 }
+
+var langs = []language.Tag{
+	language.English,
+	language.Japanese,
+}
+var matcher = language.NewMatcher(langs)
 
 // NewOptions ...
 func NewOptions(
@@ -33,10 +44,25 @@ func NewOptions(
 	slackChannel string,
 	slackMention string,
 	nonInteractive bool,
+	lang string,
 ) (*Options, error) {
+	box := packr.New("i18n", "../i18n")
+	bundle := i18n.NewBundle(language.English)
+	bundle.RegisterUnmarshalFunc("toml", toml.Unmarshal)
+	for _, l := range langs {
+		path := fmt.Sprintf("%s.toml", l.String())
+		d, err := box.Find(path)
+		if err != nil {
+			return nil, err
+		}
+		bundle.MustParseMessageFileBytes(d, path)
+	}
+	matched, _, _ := matcher.Match(language.Make(lang))
+
 	o := &Options{
 		nonInteractive: nonInteractive,
 		options:        []string{},
+		localizer:      i18n.NewLocalizer(bundle, matched.String()),
 	}
 	pid, name, err := o.process(pid, name)
 	if err != nil {
@@ -77,9 +103,9 @@ func NewOptions(
 		}
 	}
 	return o, nil
-
 }
 
+// Get ...
 func (o *Options) Get() []string {
 	return o.options
 }
@@ -107,7 +133,7 @@ func (o *Options) process(pid int32, name string) (int32, string, error) {
 	fmt.Printf("%s ... %s\n", color.Magenta("--name", color.B), "name of the process.")
 	fmt.Println("")
 
-	processStr = prompter.Prompt("Enter PID or name of the process (If empty, sheer-heart-atack track only host metrics)", processStr)
+	processStr = prompter.Prompt(o.localizer.MustLocalize(&i18n.LocalizeConfig{MessageID: "processPromptMessage"}), processStr)
 
 	pidInt64, err := strconv.ParseInt(processStr, 10, 32)
 	if err == nil {
@@ -180,7 +206,7 @@ func (o *Options) threshold(threshold string, pid int32, name string) error {
 	fmt.Printf("%s\n", color.Magenta("Available Operators", color.B))
 	fmt.Printf("  %s\n", "+, -, *, /, ==, !=, <, >, <=, >=, not, and, or, !, &&, ||")
 	fmt.Println("")
-	threshold = prompter.Prompt("Enter threshold", threshold)
+	threshold = prompter.Prompt(o.localizer.MustLocalize(&i18n.LocalizeConfig{MessageID: "thresholdPromptMessage"}), threshold)
 	fmt.Println("")
 	o.options = append(o.options, []string{"--threshold", threshold}...)
 	return nil
@@ -194,7 +220,7 @@ func (o *Options) interval(interval int) error {
 	}
 	fmt.Printf("%s ... %s\n", color.Magenta("--interval", color.B), "Interval of checking if the threshold exceeded (seconds).")
 	fmt.Println("")
-	intervalStr = prompter.Prompt("Enter interval", intervalStr)
+	intervalStr = prompter.Prompt(o.localizer.MustLocalize(&i18n.LocalizeConfig{MessageID: "intervalPromptMessage"}), intervalStr)
 	fmt.Println("")
 
 	o.options = append(o.options, []string{"--interval", intervalStr}...)
@@ -209,7 +235,7 @@ func (o *Options) attempts(attempts int) error {
 	}
 	fmt.Printf("%s ... %s\n", color.Magenta("--attempts", color.B), "Maximum number of attempts continuously exceeding the threshold.")
 	fmt.Println("")
-	attemptsStr = prompter.Prompt("Enter attempts", attemptsStr)
+	attemptsStr = prompter.Prompt(o.localizer.MustLocalize(&i18n.LocalizeConfig{MessageID: "attemptsPromptMessage"}), attemptsStr)
 	fmt.Println("")
 	o.options = append(o.options, []string{"--attempts", attemptsStr}...)
 	return nil
@@ -227,7 +253,7 @@ func (o *Options) command(command string) error {
 	fmt.Printf("%s\n", color.White("Additional Environment Variables", color.B))
 	fmt.Printf("  %s: %s\n", color.White("$PID", color.B), "PID of the process.")
 	fmt.Println("")
-	command = prompter.Prompt("Enter command", command)
+	command = prompter.Prompt(o.localizer.MustLocalize(&i18n.LocalizeConfig{MessageID: "commandPromptMessage"}), command)
 	fmt.Println("")
 	if command != "" {
 		o.options = append(o.options, []string{"--command", command}...)
@@ -243,7 +269,7 @@ func (o *Options) times(times int) error {
 	}
 	fmt.Printf("%s ... %s\n", color.Magenta("--times", color.B), "Maximum number of command executions. If times < 1, track and execute until timeout.")
 	fmt.Println("")
-	timesStr = prompter.Prompt("Enter times", strconv.Itoa(times))
+	timesStr = prompter.Prompt(o.localizer.MustLocalize(&i18n.LocalizeConfig{MessageID: "timesPromptMessage"}), strconv.Itoa(times))
 	fmt.Println("")
 	o.options = append(o.options, []string{"--times", timesStr}...)
 	return nil
@@ -257,7 +283,7 @@ func (o *Options) timeout(timeout int) error {
 	}
 	fmt.Printf("%s ... %s\n", color.Magenta("--timeout", color.B), "Timeout of tracking (seconds).")
 	fmt.Println("")
-	timeoutStr = prompter.Prompt("Enter timeout", timeoutStr)
+	timeoutStr = prompter.Prompt(o.localizer.MustLocalize(&i18n.LocalizeConfig{MessageID: "timeoutPromptMessage"}), timeoutStr)
 	fmt.Println("")
 	o.options = append(o.options, []string{"--timeout", timeoutStr}...)
 	return nil
@@ -277,14 +303,14 @@ func (o *Options) slackChannel(slackChannel string) (string, error) {
 		fmt.Printf("%s: %s\n", "Slack Incomming Webhook URL", color.Magenta(url))
 		fmt.Println("")
 	}
-	yn := prompter.YN("Do you want to notify slack channel?", true)
+	yn := prompter.YN(o.localizer.MustLocalize(&i18n.LocalizeConfig{MessageID: "slackChannelYNMessage"}), true)
 	if !yn {
 		fmt.Println("")
 		return "", nil
 	}
 	if urlErr != nil {
 		_, _ = fmt.Fprintf(os.Stderr, "%s\n", urlErr)
-		url = prompter.Prompt("Enter slack incoming webhook URL", "")
+		url = prompter.Prompt(o.localizer.MustLocalize(&i18n.LocalizeConfig{MessageID: "slackWebhookPromptMessage"}), "")
 		if url == "" {
 			_, _ = fmt.Fprintf(os.Stderr, "%s\n", errors.New("invalid URL"))
 			return o.slackChannel(slackChannel)
@@ -294,7 +320,7 @@ func (o *Options) slackChannel(slackChannel string) (string, error) {
 			return "", err
 		}
 	}
-	slackChannel = prompter.Prompt("Enter slack channel", slackChannel)
+	slackChannel = prompter.Prompt(o.localizer.MustLocalize(&i18n.LocalizeConfig{MessageID: "slackChannelPromptMessage"}), slackChannel)
 	fmt.Println("")
 	o.options = append(o.options, []string{"--slack-channel", slackChannel}...)
 	return slackChannel, nil
@@ -311,12 +337,12 @@ func (o *Options) slackMention(slackMention string) error {
 	}
 	fmt.Printf("%s ... %s\n", color.Magenta("--slack-mention", color.B), "Slack mention.")
 	fmt.Println("")
-	yn := prompter.YN("Do you want to mention?", true)
+	yn := prompter.YN(o.localizer.MustLocalize(&i18n.LocalizeConfig{MessageID: "slackMentionYNMessage"}), true)
 	if !yn {
 		fmt.Println("")
 		return nil
 	}
-	slackMention = prompter.Prompt("Enter mention [@here or user_id (ex. @UXXXXXXXX)]", slackMention)
+	slackMention = prompter.Prompt(o.localizer.MustLocalize(&i18n.LocalizeConfig{MessageID: "slackMentionPromptMessage"}), slackMention)
 	fmt.Println("")
 	o.options = append(o.options, []string{"--slack-mention", slackMention}...)
 	return nil
