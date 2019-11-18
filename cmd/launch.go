@@ -49,7 +49,9 @@ var launchCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		trackCommand := []string{exe, "track"}
+		if lang == "" {
+			lang = os.Getenv("LANG")
+		}
 		o, err := options.NewOptions(
 			pid,
 			name,
@@ -69,6 +71,7 @@ var launchCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
+		trackCommand := []string{exe, "track"}
 		trackCommand = append(trackCommand, o.Get()...)
 
 		envs := os.Environ()
@@ -102,5 +105,5 @@ func init() {
 	launchCmd.Flags().IntVarP(&timeout, "timeout", "", 60*60*24, "Timeout of tracking (seconds)")
 	launchCmd.Flags().StringVarP(&slackChannel, "slack-channel", "", "", "Slack channel to notify")
 	launchCmd.Flags().StringVarP(&slackMention, "slack-mention", "", "", "Slack mention")
-	launchCmd.Flags().StringVarP(&lang, "lang", "", os.Getenv("LANG"), "Language")
+	launchCmd.Flags().StringVarP(&lang, "lang", "", "", "Language")
 }
