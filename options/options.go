@@ -201,13 +201,13 @@ func (o *Options) threshold(threshold string, pid int32, name string) error {
 
 	fmt.Printf("%s ... %s\n", color.Magenta("--threshold", color.B), o.localizer.MustLocalize(&i18n.LocalizeConfig{MessageID: "optionThreshold"}))
 	fmt.Println("")
-	fmt.Printf("%s\n", color.Magenta("Available Metrics", color.B))
+	fmt.Printf("%s\n", color.Magenta(o.localizer.MustLocalize(&i18n.LocalizeConfig{MessageID: "availableMetrics"}), color.B))
 
 	m.Each(func(metric metrics.Metric, value interface{}) {
 		fmt.Printf("  %s (now:%s %s): %s\n", color.White(metric.Name), color.Magenta(fmt.Sprintf(metric.Format, value)), metric.Unit, metric.Description)
 	})
 
-	fmt.Printf("%s\n", color.Magenta("Available Operators", color.B))
+	fmt.Printf("%s\n", color.Magenta(o.localizer.MustLocalize(&i18n.LocalizeConfig{MessageID: "availableOperators"}), color.B))
 	fmt.Printf("  %s\n", "+, -, *, /, ==, !=, <, >, <=, >=, not, and, or, !, &&, ||")
 	fmt.Println("")
 	threshold = prompter.Prompt(o.localizer.MustLocalize(&i18n.LocalizeConfig{MessageID: "thresholdPromptMessage"}), threshold)
@@ -254,7 +254,7 @@ func (o *Options) command(command string) error {
 	}
 	fmt.Printf("%s ... %s\n", color.Magenta("--command", color.B), o.localizer.MustLocalize(&i18n.LocalizeConfig{MessageID: "optionCommand"}))
 	fmt.Println("")
-	fmt.Printf("%s\n", color.White("Additional Environment Variables", color.B))
+	fmt.Printf("%s\n", color.White(o.localizer.MustLocalize(&i18n.LocalizeConfig{MessageID: "additionalEnvironmentVariables"}), color.B))
 	fmt.Printf("  %s: %s\n", color.White("$PID", color.B), "PID of the process.")
 	fmt.Println("")
 	command = prompter.Prompt(o.localizer.MustLocalize(&i18n.LocalizeConfig{MessageID: "commandPromptMessage"}), command)
