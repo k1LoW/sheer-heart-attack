@@ -1,5 +1,9 @@
 # Changelog
 
+## [v3.1.1](https://github.com/k1LoW/sheer-heart-attack/compare/v3.1.0...v3.1.1) (2019-11-18)
+
+* Update i18n [#28](https://github.com/k1LoW/sheer-heart-attack/pull/28) ([k1LoW](https://github.com/k1LoW))
+
 ## [v3.1.0](https://github.com/k1LoW/sheer-heart-attack/compare/v3.0.0...v3.1.0) (2019-11-18)
 
 * Add i18n [#27](https://github.com/k1LoW/sheer-heart-attack/pull/27) ([k1LoW](https://github.com/k1LoW))
