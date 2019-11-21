@@ -114,6 +114,7 @@ var trackCmd = &cobra.Command{
 			{"slack-channel", slackChannel},
 			{"command", command},
 			{"hostname", hostname},
+			{"log-path", logPath},
 		}
 
 		if slackChannel != "" {

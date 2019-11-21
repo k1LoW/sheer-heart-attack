@@ -84,6 +84,14 @@ func notifySlack(webhookURL string, slackChannel string, slackMention string, tr
 					Value: v,
 					Short: true,
 				})
+			case "log-path":
+				l := cast.ToString(f.value)
+				v := fmt.Sprintf("```%s```", l)
+				attachment.AddField(&slack.Field{
+					Title: "log path",
+					Value: v,
+					Short: false,
+				})
 			default:
 				attachment.AddField(&slack.Field{
 					Title: fmt.Sprintf("--%s", f.key),
