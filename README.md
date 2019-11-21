@@ -51,11 +51,11 @@ Just execute `sheer-heart-attack launch`.
 | --- | --- | --- |
 | `pid` | | PID of the process. |
 | `threshold` | `cpu > 5 \|\| mem > 10` | Threshold conditions. |
-| `interval` | `5s` | Interval of checking if the threshold exceeded''. |
+| `interval` | `5s` | Interval of checking if the threshold exceeded. |
 | `attempts` | `1` | Maximum number of attempts continuously exceeding the threshold. |
 | `command` | | Command to execute when the maximum number of attempts is exceeded. |
 | `times` | `1` | Maximum number of command executions. If times < 1, track and execute until timeout. |
-| `timeout` | `1day` | Timeout of tracking''. |
+| `timeout` | `1day` | Timeout of tracking. |
 | `slack-channel` | | Slack channel to notify. |
 | `slack-mention` | | Slack mention. (`@here` or user_id `@UXXXXXXXXX`) |
 
