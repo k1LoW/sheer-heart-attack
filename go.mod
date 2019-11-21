@@ -5,6 +5,7 @@ require (
 	github.com/Songmu/prompter v0.2.0
 	github.com/antonmedv/expr v1.3.0
 	github.com/gobuffalo/packr/v2 v2.7.1
+	github.com/k1LoW/duration v1.0.0
 	github.com/k1LoW/exec v0.1.1
 	github.com/k1LoW/metr v0.9.1
 	github.com/labstack/gommon v0.3.0

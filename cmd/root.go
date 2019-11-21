@@ -33,9 +33,9 @@ var (
 	threshold    string
 	attempts     int
 	command      string
-	interval     int
+	interval     string
 	times        int
-	timeout      int
+	timeout      string
 	slackChannel string
 	slackMention string
 )

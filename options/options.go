@@ -37,11 +37,11 @@ func NewOptions(
 	pid int32,
 	name string,
 	threshold string,
-	interval int,
+	interval string,
 	attempts int,
 	command string,
 	times int,
-	timeout int,
+	timeout string,
 	slackChannel string,
 	slackMention string,
 	nonInteractive bool,
@@ -216,8 +216,8 @@ func (o *Options) threshold(threshold string, pid int32, name string) error {
 	return nil
 }
 
-func (o *Options) interval(interval int) error {
-	intervalStr := strconv.Itoa(interval)
+func (o *Options) interval(interval string) error {
+	intervalStr := interval
 	if o.nonInteractive {
 		o.options = append(o.options, []string{"--interval", intervalStr}...)
 		return nil
@@ -279,8 +279,8 @@ func (o *Options) times(times int) error {
 	return nil
 }
 
-func (o *Options) timeout(timeout int) error {
-	timeoutStr := strconv.Itoa(timeout)
+func (o *Options) timeout(timeout string) error {
+	timeoutStr := timeout
 	if o.nonInteractive {
 		o.options = append(o.options, []string{"--timeout", timeoutStr}...)
 		return nil
