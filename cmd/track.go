@@ -27,10 +27,12 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"regexp"
 	"sync"
 	"time"
 
 	"github.com/antonmedv/expr"
+	"github.com/k1LoW/duration"
 	"github.com/k1LoW/exec"
 	"github.com/k1LoW/metr/metrics"
 	"github.com/k1LoW/sheer-heart-attack/logger"
@@ -76,8 +78,25 @@ var trackCmd = &cobra.Command{
 		}
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
-		timer := time.NewTimer(time.Duration(timeout) * time.Second)
-		ticker := time.NewTicker(time.Duration(interval) * time.Second)
+		numRe := regexp.MustCompile(`^\d+$`)
+		if numRe.MatchString(timeout) {
+			timeout = timeout + "s"
+		}
+		timeoutDuration, err := duration.Parse(timeout)
+		if err != nil {
+			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
+			os.Exit(1)
+		}
+		timer := time.NewTimer(timeoutDuration)
+		if numRe.MatchString(interval) {
+			interval = interval + "s"
+		}
+		intervalDuration, err := duration.Parse(interval)
+		if err != nil {
+			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
+			os.Exit(1)
+		}
+		ticker := time.NewTicker(intervalDuration)
 		envs := os.Environ()
 		logPath, err := filepath.Abs(fmt.Sprintf("sheer-heart-attack-%s.log", time.Now().Format(time.RFC3339)))
 		if err != nil {
@@ -183,7 +202,7 @@ var trackCmd = &cobra.Command{
 							fields = append(fields, zap.Any(metric.Name, value))
 						})
 						if command != "" {
-							executionTimeout := interval * 3
+							executionTimeout := intervalDuration * 3
 							stdout, stderr, err := execute(ctx, command, envs, executionTimeout)
 							fields = []zap.Field{
 								zap.ByteString("stdout", stdout),
@@ -220,18 +239,18 @@ func init() {
 	trackCmd.Flags().Int32VarP(&pid, "pid", "", 0, "PID of the process")
 	trackCmd.Flags().StringVarP(&name, "name", "", "", "name of the process")
 	trackCmd.Flags().StringVarP(&threshold, "threshold", "", "cpu > 5 || mem > 10", "Threshold conditions")
-	trackCmd.Flags().IntVarP(&interval, "interval", "", 5, "Interval of checking if the threshold exceeded (seconds)")
+	trackCmd.Flags().StringVarP(&interval, "interval", "", "5s", "Interval of checking if the threshold exceeded''")
 	trackCmd.Flags().IntVarP(&attempts, "attempts", "", 1, "Maximum number of attempts continuously exceeding the threshold")
 	trackCmd.Flags().StringVarP(&command, "command", "", "", "Command to execute when the maximum number of attempts is exceeded")
 	trackCmd.Flags().IntVarP(&times, "times", "", 1, "Maximum number of command executions. If times < 1, track and execute until timeout")
-	trackCmd.Flags().IntVarP(&timeout, "timeout", "", 60*60*24, "Timeout of tracking (seconds)")
+	trackCmd.Flags().StringVarP(&timeout, "timeout", "", "1day", "Timeout of tracking''")
 	trackCmd.Flags().StringVarP(&slackChannel, "slack-channel", "", "", "Slack channel to notify")
 	trackCmd.Flags().StringVarP(&slackMention, "slack-mention", "", "", "Slack mention")
 	trackCmd.Flags().BoolVarP(&force, "force", "", false, "Force execute 'track' command on tty")
 }
 
-func execute(ctx context.Context, command string, envs []string, timeout int) ([]byte, []byte, error) {
-	innerCtx, cancel := context.WithTimeout(ctx, time.Duration(timeout)*time.Second)
+func execute(ctx context.Context, command string, envs []string, timeout time.Duration) ([]byte, []byte, error) {
+	innerCtx, cancel := context.WithTimeout(ctx, timeout)
 	defer cancel()
 	var stdout bytes.Buffer
 	var stderr bytes.Buffer

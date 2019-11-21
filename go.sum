@@ -42,6 +42,8 @@ github.com/jehiah/go-strftime v0.0.0-20171201141054-1d33003b3869/go.mod h1:cJ6Cj
 github.com/joho/godotenv v1.3.0 h1:Zjp+RcGpHhGlrMbJzXTrZZPrWj+1vfm90La1wgB6Bhc=
 github.com/joho/godotenv v1.3.0/go.mod h1:7hK45KPybAkOC6peb+G5yklZfMxEjkZhHbwpqxOKXbg=
 github.com/jonboulle/clockwork v0.1.0/go.mod h1:Ii8DK3G1RaLaWxj9trq07+26W01tbo22gdxWY5EU2bo=
+github.com/k1LoW/duration v1.0.0 h1:3RbcoNlKj0JJpi+aRdT8Ewmh7fOsLYU4P2O093YHYB4=
+github.com/k1LoW/duration v1.0.0/go.mod h1:MEWYmZ4Agei4RDvERiInjZAhcZStYLp6y7+ZrpaAMJQ=
 github.com/k1LoW/exec v0.1.1 h1:bhSiP38GtgBTE6i99VsxcelssgdxQRDE9csAwFYfrH4=
 github.com/k1LoW/exec v0.1.1/go.mod h1:zW7HJpLP/ZndnbPrspA9Z3Q2CxHMK/PAUztlvZem+Ro=
 github.com/k1LoW/metr v0.9.1 h1:sHu5VyN87PBBNYdKuU14LC40ncxpPI6Egt8rWDuwziw=
