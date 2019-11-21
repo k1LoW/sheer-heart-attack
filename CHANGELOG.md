@@ -1,5 +1,10 @@
 # Changelog
 
+## [v3.2.0](https://github.com/k1LoW/sheer-heart-attack/compare/v3.1.1...v3.2.0) (2019-11-21)
+
+* Allow time unit ( use github.com/k1LoW/duration ) [#30](https://github.com/k1LoW/sheer-heart-attack/pull/30) ([k1LoW](https://github.com/k1LoW))
+* Add log path to Slack notify message [#29](https://github.com/k1LoW/sheer-heart-attack/pull/29) ([k1LoW](https://github.com/k1LoW))
+
 ## [v3.1.1](https://github.com/k1LoW/sheer-heart-attack/compare/v3.1.0...v3.1.1) (2019-11-18)
 
 * Update i18n [#28](https://github.com/k1LoW/sheer-heart-attack/pull/28) ([k1LoW](https://github.com/k1LoW))
