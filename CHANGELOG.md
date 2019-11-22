@@ -1,5 +1,10 @@
 # Changelog
 
+## [v3.2.1](https://github.com/k1LoW/sheer-heart-attack/compare/v3.2.0...v3.2.1) (2019-11-22)
+
+* Fix counting the number of executions [#32](https://github.com/k1LoW/sheer-heart-attack/pull/32) ([k1LoW](https://github.com/k1LoW))
+* Hide `--pid` and `--name` from Slack message when track host metrics only [#31](https://github.com/k1LoW/sheer-heart-attack/pull/31) ([k1LoW](https://github.com/k1LoW))
+
 ## [v3.2.0](https://github.com/k1LoW/sheer-heart-attack/compare/v3.1.1...v3.2.0) (2019-11-21)
 
 * Allow time unit ( use github.com/k1LoW/duration ) [#30](https://github.com/k1LoW/sheer-heart-attack/pull/30) ([k1LoW](https://github.com/k1LoW))
