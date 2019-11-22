@@ -149,7 +149,7 @@ var trackCmd = &cobra.Command{
 			fields = append(fields, zap.Any(o.key, o.value))
 		}
 		exceeded := 0
-		executed := 0
+		execution := 0
 		l.Info(startMessage, fields...)
 		sg := sync.WaitGroup{}
 
@@ -194,9 +194,14 @@ var trackCmd = &cobra.Command{
 				} else {
 					exceeded = 0
 				}
+				if times > 0 && execution >= times {
+					break L
+				}
 				if exceeded >= attempts {
 					sg.Add(1)
 					go func(ctx context.Context) {
+						execution++
+						exceeded = 0
 						fields := []zap.Field{}
 						m.Each(func(metric metrics.Metric, value interface{}) {
 							fields = append(fields, zap.Any(metric.Name, value))
@@ -216,13 +221,8 @@ var trackCmd = &cobra.Command{
 						} else {
 							l.Info(noExecuteMessage, fields...)
 						}
-						executed++
-						exceeded = 0
 						sg.Done()
 					}(ctx)
-				}
-				if times > 0 && executed >= times {
-					break L
 				}
 			case <-ctx.Done():
 				break L
