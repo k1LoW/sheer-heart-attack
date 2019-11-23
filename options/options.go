@@ -263,9 +263,9 @@ func (o *Options) command(commands []string, first bool) error {
 	}
 	if len(commands) > 0 {
 		fmt.Println("")
-		fmt.Printf("%s\n", color.Magenta("Execution commands"))
+		fmt.Printf("%s:\n", color.White("Execution commands"))
 		for _, c := range commands {
-			fmt.Printf("%s %s\n", color.Magenta(">"), color.White(c))
+			fmt.Printf("> %s\n", color.Magenta(c))
 		}
 		fmt.Println("")
 	}
@@ -282,9 +282,13 @@ func (o *Options) command(commands []string, first bool) error {
 	if yn {
 		return o.command(commands, false)
 	}
+	fmt.Println("")
+	fmt.Printf("%s:\n", color.White("Execution commands"))
 	for _, c := range commands {
+		fmt.Printf("> %s\n", color.Magenta(c))
 		o.options = append(o.options, []string{"--command", c}...)
 	}
+	fmt.Println("")
 	return nil
 }
 
