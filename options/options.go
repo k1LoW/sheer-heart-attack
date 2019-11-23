@@ -269,9 +269,11 @@ func (o *Options) command(commands []string, first bool) error {
 	if first {
 		fmt.Printf("%s ... %s\n", color.Magenta("--command", color.B), o.localizer.MustLocalize(&i18n.LocalizeConfig{MessageID: "optionCommand"}))
 		fmt.Println("")
-		fmt.Printf("%s\n", color.White(o.localizer.MustLocalize(&i18n.LocalizeConfig{MessageID: "additionalEnvironmentVariables"}), color.B))
-		fmt.Printf("  %s: %s\n", color.White("$PID", color.B), "PID of the process.")
-		fmt.Println("")
+		if o.pid > 0 {
+			fmt.Printf("%s\n", color.White(o.localizer.MustLocalize(&i18n.LocalizeConfig{MessageID: "additionalEnvironmentVariables"}), color.B))
+			fmt.Printf("  %s: %s\n", color.White("$PID", color.B), "PID of the process.")
+			fmt.Println("")
+		}
 	}
 	if len(commands) > 0 {
 		fmt.Println("")
