@@ -32,7 +32,7 @@ var (
 	name         string
 	threshold    string
 	attempts     int
-	command      string
+	commands     []string
 	interval     string
 	times        int
 	timeout      string

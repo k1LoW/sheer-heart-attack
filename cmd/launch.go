@@ -58,7 +58,7 @@ var launchCmd = &cobra.Command{
 			threshold,
 			interval,
 			attempts,
-			command,
+			commands,
 			times,
 			timeout,
 			slackChannel,
@@ -100,7 +100,7 @@ func init() {
 	launchCmd.Flags().StringVarP(&threshold, "threshold", "", "cpu > 5 || mem > 10", "Threshold conditions")
 	launchCmd.Flags().StringVarP(&interval, "interval", "", "5s", "Interval of checking if the threshold exceeded")
 	launchCmd.Flags().IntVarP(&attempts, "attempts", "", 1, "Maximum number of attempts continuously exceeding the threshold")
-	launchCmd.Flags().StringVarP(&command, "command", "", "", "Command to execute when the maximum number of attempts is exceeded")
+	launchCmd.Flags().StringArrayVarP(&commands, "command", "", []string{}, "Command to execute when the maximum number of attempts is exceeded")
 	launchCmd.Flags().IntVarP(&times, "times", "", 1, "Maximum number of command executions. If times < 1, track and execute until timeout")
 	launchCmd.Flags().StringVarP(&timeout, "timeout", "", "1day", "Timeout of tracking")
 	launchCmd.Flags().StringVarP(&slackChannel, "slack-channel", "", "", "Slack channel to notify")
