@@ -21,6 +21,8 @@ import (
 const CollectInterval = time.Duration(500) * time.Millisecond
 
 type Options struct {
+	pid            int32
+	name           string
 	nonInteractive bool
 	options        []string
 	localizer      *i18n.Localizer
@@ -68,11 +70,11 @@ func NewOptions(
 		options:        []string{},
 		localizer:      i18n.NewLocalizer(bundle, matched.String()),
 	}
-	pid, name, err := o.process(pid, name)
+	err := o.process(pid, name)
 	if err != nil {
 		return o, err
 	}
-	err = o.threshold(threshold, pid, name)
+	err = o.threshold(threshold)
 	if err != nil {
 		return o, err
 	}
@@ -114,9 +116,11 @@ func (o *Options) Get() []string {
 	return o.options
 }
 
-func (o *Options) process(pid int32, name string) (int32, string, error) {
+func (o *Options) process(pid int32, name string) error {
+	o.pid = pid
+	o.name = name
 	if pid > 0 && name != "" {
-		return pid, name, errors.New("you can only use either --pid or --name")
+		return errors.New("you can only use either --pid or --name")
 	}
 	if o.nonInteractive {
 		if pid > 0 {
@@ -125,7 +129,7 @@ func (o *Options) process(pid int32, name string) (int32, string, error) {
 		if name != "" {
 			o.options = append(o.options, []string{"--name", name}...)
 		}
-		return pid, name, nil
+		return nil
 	}
 
 	processStr := strconv.Itoa(int(pid))
@@ -141,6 +145,7 @@ func (o *Options) process(pid int32, name string) (int32, string, error) {
 
 	pidInt64, err := strconv.ParseInt(processStr, 10, 32)
 	if err == nil {
+		// pid
 		pid = int32(pidInt64)
 		p, err := process.NewProcess(pid)
 		if err != nil {
@@ -156,22 +161,29 @@ func (o *Options) process(pid int32, name string) (int32, string, error) {
 		fmt.Printf("Target process name: %s\n", color.Magenta(name))
 		fmt.Println("")
 		o.options = append(o.options, []string{"--pid", processStr}...)
-		return pid, "", nil
+		o.pid = pid
+		o.name = ""
+		return nil
 	}
 
 	if processStr != "" {
+		// name
 		fmt.Printf("Target process name: %s\n", color.Magenta(processStr))
 		fmt.Println("")
-		o.options = append(o.options, []string{"--pid", processStr}...)
-		return 0, processStr, nil
+		o.options = append(o.options, []string{"--name", processStr}...)
+		o.pid = 0
+		o.name = processStr
+		return nil
 	}
 
 	fmt.Println(color.Magenta("Track only host metrics"))
 	fmt.Println("")
-	return 0, "", nil
+	o.pid = 0
+	o.name = ""
+	return nil
 }
 
-func (o *Options) threshold(threshold string, pid int32, name string) error {
+func (o *Options) threshold(threshold string) error {
 	if o.nonInteractive {
 		o.options = append(o.options, []string{"--threshold", threshold}...)
 		return nil
@@ -182,13 +194,13 @@ func (o *Options) threshold(threshold string, pid int32, name string) error {
 	)
 
 	switch {
-	case pid > 0:
-		m, err = metrics.GetMetrics(CollectInterval, pid)
+	case o.pid > 0:
+		m, err = metrics.GetMetrics(CollectInterval, o.pid)
 		if err != nil {
 			return err
 		}
-	case name != "":
-		m, err = metrics.GetMetricsByName(CollectInterval, name)
+	case o.name != "":
+		m, err = metrics.GetMetricsByName(CollectInterval, o.name)
 		if err != nil {
 			return err
 		}

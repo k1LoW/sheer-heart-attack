@@ -14,7 +14,7 @@ require (
 	github.com/monochromegane/slack-incoming-webhooks v0.0.0-20190412004341-906fc29664ab
 	github.com/nicksnyder/go-i18n/v2 v2.0.2
 	github.com/sanity-io/litter v1.2.0 // indirect
-	github.com/shirou/gopsutil v2.19.9+incompatible
+	github.com/shirou/gopsutil v2.18.12+incompatible
 	github.com/spf13/cast v1.3.0
 	github.com/spf13/cobra v0.0.5
 	go.uber.org/multierr v1.2.0 // indirect
