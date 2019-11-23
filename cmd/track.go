@@ -98,6 +98,7 @@ var trackCmd = &cobra.Command{
 		}
 		ticker := time.NewTicker(intervalDuration)
 		envs := os.Environ()
+		executionTimeout := intervalDuration * 3
 		logPath, err := filepath.Abs(fmt.Sprintf("sheer-heart-attack-%s.log", time.Now().Format(time.RFC3339)))
 		if err != nil {
 			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
@@ -131,7 +132,7 @@ var trackCmd = &cobra.Command{
 			{"times", times},
 			{"timeout", timeout},
 			{"slack-channel", slackChannel},
-			{"command", command},
+			{"command", commands},
 			{"hostname", hostname},
 			{"log-path", logPath},
 		}
@@ -206,18 +207,26 @@ var trackCmd = &cobra.Command{
 						m.Each(func(metric metrics.Metric, value interface{}) {
 							fields = append(fields, zap.Any(metric.Name, value))
 						})
-						if command != "" {
-							executionTimeout := intervalDuration * 3
-							stdout, stderr, err := execute(ctx, command, envs, executionTimeout)
-							fields = []zap.Field{
-								zap.ByteString("stdout", stdout),
-								zap.ByteString("stderr", stderr),
+						if len(commands) > 0 {
+							cmdSg := sync.WaitGroup{}
+							for _, c := range commands {
+								cmdSg.Add(1)
+								go func(ctx context.Context, c string) {
+									stdout, stderr, err := execute(ctx, c, envs, executionTimeout)
+									fields = []zap.Field{
+										zap.String("command", c),
+										zap.ByteString("stdout", stdout),
+										zap.ByteString("stderr", stderr),
+									}
+									l.Info(executeMessage, fields...)
+									if err != nil {
+										l.Error(executeFailedMessage, zap.Error(err))
+										// do not break
+									}
+									cmdSg.Done()
+								}(ctx, c)
 							}
-							l.Info(executeMessage, fields...)
-							if err != nil {
-								l.Error(executeFailedMessage, zap.Error(err))
-								// do not break
-							}
+							cmdSg.Wait()
 						} else {
 							l.Info(noExecuteMessage, fields...)
 						}
@@ -241,7 +250,7 @@ func init() {
 	trackCmd.Flags().StringVarP(&threshold, "threshold", "", "cpu > 5 || mem > 10", "Threshold conditions")
 	trackCmd.Flags().StringVarP(&interval, "interval", "", "5s", "Interval of checking if the threshold exceeded")
 	trackCmd.Flags().IntVarP(&attempts, "attempts", "", 1, "Maximum number of attempts continuously exceeding the threshold")
-	trackCmd.Flags().StringVarP(&command, "command", "", "", "Command to execute when the maximum number of attempts is exceeded")
+	trackCmd.Flags().StringArrayVarP(&commands, "command", "", []string{}, "Command to execute when the maximum number of attempts is exceeded")
 	trackCmd.Flags().IntVarP(&times, "times", "", 1, "Maximum number of command executions. If times < 1, track and execute until timeout")
 	trackCmd.Flags().StringVarP(&timeout, "timeout", "", "1day", "Timeout of tracking")
 	trackCmd.Flags().StringVarP(&slackChannel, "slack-channel", "", "", "Slack channel to notify")

@@ -39,7 +39,7 @@ func NewOptions(
 	threshold string,
 	interval string,
 	attempts int,
-	command string,
+	commands []string,
 	times int,
 	timeout string,
 	slackChannel string,
@@ -84,7 +84,7 @@ func NewOptions(
 	if err != nil {
 		return o, err
 	}
-	err = o.command(command)
+	err = o.command(commands, true)
 	if err != nil {
 		return o, err
 	}
@@ -245,22 +245,45 @@ func (o *Options) attempts(attempts int) error {
 	return nil
 }
 
-func (o *Options) command(command string) error {
+func (o *Options) command(commands []string, first bool) error {
 	if o.nonInteractive {
-		if command != "" {
-			o.options = append(o.options, []string{"--command", command}...)
+		if len(commands) > 0 {
+			for _, c := range commands {
+				o.options = append(o.options, []string{"--command", c}...)
+			}
 		}
 		return nil
 	}
-	fmt.Printf("%s ... %s\n", color.Magenta("--command", color.B), o.localizer.MustLocalize(&i18n.LocalizeConfig{MessageID: "optionCommand"}))
-	fmt.Println("")
-	fmt.Printf("%s\n", color.White(o.localizer.MustLocalize(&i18n.LocalizeConfig{MessageID: "additionalEnvironmentVariables"}), color.B))
-	fmt.Printf("  %s: %s\n", color.White("$PID", color.B), "PID of the process.")
-	fmt.Println("")
-	command = prompter.Prompt(o.localizer.MustLocalize(&i18n.LocalizeConfig{MessageID: "commandPromptMessage"}), command)
+	if first {
+		fmt.Printf("%s ... %s\n", color.Magenta("--command", color.B), o.localizer.MustLocalize(&i18n.LocalizeConfig{MessageID: "optionCommand"}))
+		fmt.Println("")
+		fmt.Printf("%s\n", color.White(o.localizer.MustLocalize(&i18n.LocalizeConfig{MessageID: "additionalEnvironmentVariables"}), color.B))
+		fmt.Printf("  %s: %s\n", color.White("$PID", color.B), "PID of the process.")
+		fmt.Println("")
+	}
+	if len(commands) > 0 {
+		fmt.Println("")
+		fmt.Printf("%s\n", color.Magenta("Execution commands"))
+		for _, c := range commands {
+			fmt.Printf("%s %s\n", color.Magenta(">"), color.White(c))
+		}
+		fmt.Println("")
+	}
+
+	command := prompter.Prompt(o.localizer.MustLocalize(&i18n.LocalizeConfig{MessageID: "commandPromptMessage"}), "")
 	fmt.Println("")
 	if command != "" {
-		o.options = append(o.options, []string{"--command", command}...)
+		commands = append(commands, command)
+	}
+	if len(commands) == 0 {
+		return nil
+	}
+	yn := prompter.YN(o.localizer.MustLocalize(&i18n.LocalizeConfig{MessageID: "commandYNMessage"}), false)
+	if yn {
+		return o.command(commands, false)
+	}
+	for _, c := range commands {
+		o.options = append(o.options, []string{"--command", c}...)
 	}
 	return nil
 }
