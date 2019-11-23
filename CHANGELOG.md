@@ -1,5 +1,10 @@
 # Changelog
 
+## [v3.3.0](https://github.com/k1LoW/sheer-heart-attack/compare/v3.2.1...v3.3.0) (2019-11-23)
+
+* Fix: `--name` is not working [#34](https://github.com/k1LoW/sheer-heart-attack/pull/34) ([k1LoW](https://github.com/k1LoW))
+* Support multiple commands [#33](https://github.com/k1LoW/sheer-heart-attack/pull/33) ([k1LoW](https://github.com/k1LoW))
+
 ## [v3.2.1](https://github.com/k1LoW/sheer-heart-attack/compare/v3.2.0...v3.2.1) (2019-11-22)
 
 * Fix counting the number of executions [#32](https://github.com/k1LoW/sheer-heart-attack/pull/32) ([k1LoW](https://github.com/k1LoW))
