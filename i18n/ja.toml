@@ -12,6 +12,7 @@ optionSlackMention="Slack通知時に利用するメンション."
 availableMetrics="利用可能なメトリクス"
 availableOperators="利用可能な演算子"
 additionalEnvironmentVariables="追加で利用可能な環境変数"
+executionCommands="実行コマンド"
 
 processPromptMessage="計測するプロセスのPIDかプロセス名を入力してください (空値の場合はホストのメトリクスのみを計測します）"
 thresholdPromptMessage="閾値の条件を入力してください"

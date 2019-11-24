@@ -176,6 +176,7 @@ func (o *Options) process(pid int32, name string) error {
 		return nil
 	}
 
+	fmt.Println("")
 	fmt.Println(color.Magenta("Track only host metrics"))
 	fmt.Println("")
 	o.pid = 0
@@ -277,7 +278,7 @@ func (o *Options) command(commands []string, first bool) error {
 	}
 	if len(commands) > 0 {
 		fmt.Println("")
-		fmt.Printf("%s:\n", color.White("Execution commands"))
+		fmt.Printf("%s:\n", color.White(o.localizer.MustLocalize(&i18n.LocalizeConfig{MessageID: "executionCommands"})))
 		for _, c := range commands {
 			fmt.Printf("> %s\n", color.Magenta(c))
 		}
@@ -297,7 +298,7 @@ func (o *Options) command(commands []string, first bool) error {
 		return o.command(commands, false)
 	}
 	fmt.Println("")
-	fmt.Printf("%s:\n", color.White("Execution commands"))
+	fmt.Printf("%s:\n", color.White(o.localizer.MustLocalize(&i18n.LocalizeConfig{MessageID: "executionCommands"})))
 	for _, c := range commands {
 		fmt.Printf("> %s\n", color.Magenta(c))
 		o.options = append(o.options, []string{"--command", c}...)

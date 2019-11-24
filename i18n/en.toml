@@ -12,6 +12,7 @@ optionSlackMention="Slack mention."
 availableMetrics="Available Metrics"
 availableOperators="Available Operators"
 additionalEnvironmentVariables="Additional Environment Variables"
+executionCommands="Execution commands"
 
 processPromptMessage="Enter PID or name of the process (If empty, sheer-heart-atack track only host metrics)"
 thresholdPromptMessage="Enter threshold"
