@@ -9,7 +9,7 @@ builds:
     pre: packr2
     post: packr2 clean
   env:
-  - CGO_ENABLED=1
+    - CGO_ENABLED=1
   goos:
     - darwin
   goarch:
@@ -22,7 +22,7 @@ builds:
     pre: packr2
     post: packr2 clean
   env:
-  - CGO_ENABLED=0
+    - CGO_ENABLED=0
   goos:
     - linux
   goarch:
@@ -45,9 +45,9 @@ changelog:
 nfpms:
   -
     id: killer-q-nfpms
-    name_template: "{{ .ProjectName }}_{{ .Version }}-1_{{ .Arch }}"
+    file_name_template: "{{ .ProjectName }}_{{ .Version }}-1_{{ .Arch }}"
     builds:
-    - killer-q-linux
+      - killer-q-linux
     homepage: https://github.com/k1LoW/sheer-heart-attack
     maintainer: Ken'ichiro Oyama <k1lowxb@gmail.com>
     description: sheer-heart-attack is a debugging tool that can execute any command on process/host metrics trigger.
