@@ -137,6 +137,7 @@ var trackCmd = &cobra.Command{
 			{"log-path", logPath},
 		}
 
+		lNoHook := l
 		if slackChannel != "" {
 			webhookURL, err := options.GetEnvSlackIncommingWebhook()
 			if err != nil {
@@ -209,6 +210,7 @@ var trackCmd = &cobra.Command{
 						})
 						if len(commands) > 0 {
 							cmdSg := sync.WaitGroup{}
+							hooked := false
 							for _, c := range commands {
 								cmdSg.Add(1)
 								go func(ctx context.Context, c string) {
@@ -218,7 +220,12 @@ var trackCmd = &cobra.Command{
 										zap.ByteString("stdout", stdout),
 										zap.ByteString("stderr", stderr),
 									}
-									l.Info(executeMessage, fields...)
+									if hooked {
+										lNoHook.Info(executeMessage, fields...)
+									} else {
+										hooked = true
+										l.Info(executeMessage, fields...)
+									}
 									if err != nil {
 										l.Error(executeFailedMessage, zap.Error(err))
 										// do not break
