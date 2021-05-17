@@ -21,7 +21,6 @@
 package cmd
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/spf13/cobra"
@@ -42,18 +41,16 @@ var (
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
-	Use:   "sheer-heart-attack",
-	Short: "A debugging tool that can execute any command on process/host metrics trigger",
-	Long:  `A debugging tool that can execute any command on process/host metrics trigger.`,
+	Use:          "sheer-heart-attack",
+	Short:        "A debugging tool that can execute any command on process/host metrics trigger",
+	Long:         `A debugging tool that can execute any command on process/host metrics trigger.`,
+	SilenceUsage: true,
 }
 
-// Execute adds all child commands to the root command and sets flags appropriately.
-// This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
+	rootCmd.SetOut(os.Stdout)
+	rootCmd.SetErr(os.Stderr)
 	if err := rootCmd.Execute(); err != nil {
-		fmt.Println(err)
 		os.Exit(1)
 	}
 }
-
-func init() {}

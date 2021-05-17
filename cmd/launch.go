@@ -42,11 +42,10 @@ var launchCmd = &cobra.Command{
 	Use:   "launch",
 	Short: "Launch 'track' command in background.",
 	Long:  `Launch 'track' command in background.`,
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		exe, err := os.Executable()
 		if err != nil {
-			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
-			os.Exit(1)
+			return err
 		}
 
 		if lang == "" {
@@ -67,8 +66,7 @@ var launchCmd = &cobra.Command{
 			lang,
 		)
 		if err != nil {
-			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
-			os.Exit(1)
+			return err
 		}
 
 		trackCommand := []string{exe, "track"}
@@ -83,11 +81,11 @@ var launchCmd = &cobra.Command{
 		c.Env = envs
 		err = c.Start()
 		if err != nil {
-			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
-			os.Exit(1)
+			return err
 		}
 
 		fmt.Printf("%s %s\n", color.Magenta("Launched:", color.B), strings.Join(trackCommand, " "))
+		return nil
 	},
 }
 
