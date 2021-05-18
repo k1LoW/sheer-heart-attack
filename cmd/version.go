@@ -32,8 +32,9 @@ var versionCmd = &cobra.Command{
 	Use:   "version",
 	Short: "print version",
 	Long:  `print version`,
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		fmt.Println(version.Version)
+		return nil
 	},
 }
 

@@ -71,10 +71,9 @@ var trackCmd = &cobra.Command{
 		}
 		return nil
 	},
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 		if isatty.IsTerminal(os.Stdout.Fd()) && !force {
-			_, _ = fmt.Fprintf(os.Stderr, "%s\n", "can not execute `track` directly. execute via `launch`, or use `--force` option")
-			os.Exit(1)
+			return fmt.Errorf("%s\n", "can not execute `track` directly. execute via `launch`, or use `--force` option")
 		}
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
@@ -84,8 +83,7 @@ var trackCmd = &cobra.Command{
 		}
 		timeoutDuration, err := duration.Parse(timeout)
 		if err != nil {
-			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
-			os.Exit(1)
+			return err
 		}
 		timer := time.NewTimer(timeoutDuration)
 		if numRe.MatchString(interval) {
@@ -93,34 +91,29 @@ var trackCmd = &cobra.Command{
 		}
 		intervalDuration, err := duration.Parse(interval)
 		if err != nil {
-			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
-			os.Exit(1)
+			return err
 		}
 		ticker := time.NewTicker(intervalDuration)
 		envs := os.Environ()
 		executionTimeout := intervalDuration * 3
 		logPath, err := filepath.Abs(fmt.Sprintf("sheer-heart-attack-%s.log", time.Now().Format(time.RFC3339)))
 		if err != nil {
-			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
-			os.Exit(1)
+			return err
 		}
 		l := logger.NewLogger(logPath)
 		if pid > 0 {
 			p, err := process.NewProcess(pid)
 			if err != nil {
-				_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
-				os.Exit(1)
+				return err
 			}
 			name, err = p.Name()
 			if err != nil {
-				_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
-				os.Exit(1)
+				return err
 			}
 		}
 		hostname, err := os.Hostname()
 		if err != nil {
-			_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
-			os.Exit(1)
+			return err
 		}
 
 		trackFields := []trackField{
@@ -141,8 +134,7 @@ var trackCmd = &cobra.Command{
 		if slackChannel != "" {
 			webhookURL, err := options.GetEnvSlackIncommingWebhook()
 			if err != nil {
-				_, _ = fmt.Fprintf(os.Stderr, "%s\n", err)
-				os.Exit(1)
+				return err
 			}
 			l = l.WithOptions(zap.Hooks(notifySlack(webhookURL, slackChannel, slackMention, trackFields)))
 		}
@@ -247,6 +239,7 @@ var trackCmd = &cobra.Command{
 
 		sg.Wait()
 		l.Info(endMessage)
+		return nil
 	},
 }
 
