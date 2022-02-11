@@ -1,6 +1,10 @@
 name: build
 
-on: push
+on:
+  push:
+    branches:
+      - main
+  pull_request:
 
 jobs:
   job-test:
@@ -8,15 +12,12 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        go_version: [1.16]
+        go_version: [1.17]
     steps:
       - name: Set up Go ${{ matrix.go_version }}
         uses: actions/setup-go@v2
         with:
           go-version: ${{ matrix.go_version }}
-
-      - name: Install codecov
-        run: sudo pip install codecov
 
       - name: Check out source code
         uses: actions/checkout@v2
@@ -24,7 +25,5 @@ jobs:
       - name: Run tests
         run: make ci
 
-      - name: Run codecov
-        run: codecov
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      - name: Run octocov
+        uses: k1LoW/octocov-action@v0
