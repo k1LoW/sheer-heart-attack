@@ -16,7 +16,7 @@
 > This is the recommended usage.
 
 ``` console
-root@kilr_q:~# source <(curl -sL https://git.io/sheer-heart-attack)
+root@kilr_q:~# source <(curl -sL https://raw.githubusercontent.com/k1LoW/sheer-heart-attack/main/use)
 You can use `sheer-heart-attack` command in this session.
 root@kilr_q:~# sheer-heart-attack launch
 ```
