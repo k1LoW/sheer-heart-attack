@@ -1,7 +1,7 @@
 #!/usr/bin/env fish
 # Usage:
 #
-#   source (curl -sL https://git.io/sheer-heart-attack-fish)
+#   source (curl -sL https://raw.githubusercontent.com/k1LoW/sheer-heart-attack/main/use-fish)
 #
 # Reference:
 #   https://github.com/goreleaser/get
