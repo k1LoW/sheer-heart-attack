@@ -2,31 +2,28 @@ before:
   hooks:
     - go mod download
     - go mod tidy
+    - packr2
 builds:
 -
   id: killer-q-darwin
-  hooks:
-    pre: packr2
-    post: packr2 clean
   env:
-    - CGO_ENABLED=1
+    - CGO_ENABLED=0
   goos:
     - darwin
   goarch:
     - amd64
+    - arm64
   ldflags:
     - -s -w -X github.com/k1LoW/sheer-heart-attack.version={{.Version}} -X github.com/k1LoW/sheer-heart-attack.commit={{.FullCommit}} -X github.com/k1LoW/sheer-heart-attack.date={{.Date}} -X github.com/k1LoW/sheer-heart-attack/version.Version={{.Version}}
 -
   id: killer-q-linux
-  hooks:
-    pre: packr2
-    post: packr2 clean
   env:
     - CGO_ENABLED=0
   goos:
     - linux
   goarch:
     - amd64
+    - arm64
   ldflags:
     - -s -w -X github.com/k1LoW/sheer-heart-attack.version={{.Version}} -X github.com/k1LoW/sheer-heart-attack.commit={{.FullCommit}} -X github.com/k1LoW/sheer-heart-attack.date={{.Date}} -X github.com/k1LoW/sheer-heart-attack/version.Version={{.Version}}
 archives:

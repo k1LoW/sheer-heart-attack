@@ -3,3 +3,5 @@ sheer-heart-attack
 sheer-heart-attack-logs
 *.log
 coverage.out
+packrd
+options/options-packr.go
