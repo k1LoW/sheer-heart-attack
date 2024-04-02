@@ -1,6 +1,7 @@
-.go-version
 dist/
 sheer-heart-attack
 sheer-heart-attack-logs
 *.log
-coverage.txt
+coverage.out
+packrd
+options/options-packr.go
