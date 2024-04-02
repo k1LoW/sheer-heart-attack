@@ -24,12 +24,9 @@ lint:
 	golangci-lint run ./...
 
 build:
-	packr2
 	go build -ldflags="$(BUILD_LDFLAGS)"
-	packr2 clean
 
 depsdev:
-	go install github.com/gobuffalo/packr/v2/packr2@v2.8.3
 	go install github.com/Songmu/ghch/cmd/ghch@latest
 	go install github.com/Songmu/gocredits/cmd/gocredits@latest
 

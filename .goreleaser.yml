@@ -2,7 +2,6 @@ before:
   hooks:
     - go mod download
     - go mod tidy
-    - packr2
 builds:
 -
   id: killer-q-darwin
