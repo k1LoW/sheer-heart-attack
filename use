@@ -8,6 +8,14 @@
 SHA_GOOS=linux
 SHA_EXT=tar.gz
 SHA_ARCH=amd64
+if test $(uname -m) = "arm64"
+then
+  SHA_ARCH=arm64
+elif test $(uname -m) = "aarch64"
+then
+  SHA_ARCH=arm64
+fi
+
 if test $(uname -s) = "Darwin"
 then
   SHA_GOOS=darwin

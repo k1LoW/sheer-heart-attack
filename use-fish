@@ -8,6 +8,13 @@
 set SHA_GOOS linux
 set SHA_EXT tar.gz
 set SHA_ARCH amd64
+if test $(uname -m) = "arm64"
+then
+  set SHA_ARCH arm64
+elif test $(uname -m) = "aarch64"
+then
+  set SHA_ARCH arm64
+fi
 if test (uname -s) = "Darwin"
   set SHA_GOOS darwin
   set SHA_EXT zip
