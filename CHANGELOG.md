@@ -1,5 +1,19 @@
 # Changelog
 
+## [v3.4.0](https://github.com/k1LoW/sheer-heart-attack/compare/v3.3.1...v3.4.0) - 2024-04-02
+### Other Changes
+- Bump up go and pkg version by @k1LoW in https://github.com/k1LoW/sheer-heart-attack/pull/36
+- Refactor code by @k1LoW in https://github.com/k1LoW/sheer-heart-attack/pull/37
+- Use octocov by @k1LoW in https://github.com/k1LoW/sheer-heart-attack/pull/38
+- Git.io deprecation by @k1LoW in https://github.com/k1LoW/sheer-heart-attack/pull/39
+- Update go and pkgs by @k1LoW in https://github.com/k1LoW/sheer-heart-attack/pull/40
+- Setup tagpr by @k1LoW in https://github.com/k1LoW/sheer-heart-attack/pull/41
+- Update go version by @k1LoW in https://github.com/k1LoW/sheer-heart-attack/pull/43
+- Use go:embed for i18n files by @k1LoW in https://github.com/k1LoW/sheer-heart-attack/pull/44
+- CGO_ENABLED=1 in dawwin by @k1LoW in https://github.com/k1LoW/sheer-heart-attack/pull/45
+- chore(deps): bump the dependencies group with 3 updates by @dependabot in https://github.com/k1LoW/sheer-heart-attack/pull/46
+- chore(deps): bump the dependencies group with 8 updates by @dependabot in https://github.com/k1LoW/sheer-heart-attack/pull/47
+
 ## [v3.3.1](https://github.com/k1LoW/sheer-heart-attack/compare/v3.3.0...v3.3.1) (2019-12-01)
 
 * Filter Slack messages to one when multiple commands are executed [#35](https://github.com/k1LoW/sheer-heart-attack/pull/35) ([k1LoW](https://github.com/k1LoW))
@@ -102,4 +116,3 @@
 * Add 'open_files' metric [#1](https://github.com/k1LoW/sheer-heart-attack/pull/1) ([k1LoW](https://github.com/k1LoW))
 
 ## [v0.0.1](https://github.com/k1LoW/sheer-heart-attack/compare/65aaf465cc81...v0.0.1) (2019-04-08)
-
