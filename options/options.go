@@ -1,6 +1,7 @@
 package options
 
 import (
+	"embed"
 	"errors"
 	"fmt"
 	"os"
@@ -9,7 +10,6 @@ import (
 
 	"github.com/BurntSushi/toml"
 	"github.com/Songmu/prompter"
-	"github.com/gobuffalo/packr/v2"
 	"github.com/k1LoW/metr/metrics"
 	"github.com/labstack/gommon/color"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
@@ -19,6 +19,9 @@ import (
 )
 
 const CollectInterval = time.Duration(500) * time.Millisecond
+
+//go:embed i18n/*.toml
+var i18nFS embed.FS
 
 type Options struct {
 	pid            int32
@@ -49,16 +52,16 @@ func NewOptions(
 	nonInteractive bool,
 	lang string,
 ) (*Options, error) {
-	box := packr.New("i18n", "../i18n")
+
 	bundle := i18n.NewBundle(language.English)
 	bundle.RegisterUnmarshalFunc("toml", toml.Unmarshal)
 	for _, l := range langs {
-		path := fmt.Sprintf("%s.toml", l.String())
-		d, err := box.Find(path)
+		path := fmt.Sprintf("i18n/%s.toml", l.String())
+		b, err := i18nFS.ReadFile(path)
 		if err != nil {
 			return nil, err
 		}
-		bundle.MustParseMessageFileBytes(d, path)
+		bundle.MustParseMessageFileBytes(b, path)
 	}
 	matched, _, _ := matcher.Match(language.Make(lang))
 
