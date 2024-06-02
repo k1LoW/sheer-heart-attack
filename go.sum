@@ -37,8 +37,8 @@ github.com/jehiah/go-strftime v0.0.0-20171201141054-1d33003b3869/go.mod h1:cJ6Cj
 github.com/jonboulle/clockwork v0.1.0/go.mod h1:Ii8DK3G1RaLaWxj9trq07+26W01tbo22gdxWY5EU2bo=
 github.com/k1LoW/duration v1.2.0 h1:qq1gWtPh7YROFyerBufVP+ATR11mOOHDInrcC/Xe/6A=
 github.com/k1LoW/duration v1.2.0/go.mod h1:qUa0NptIiUl5EUsCc8wIiSaHuNjS4wmpYNMHp0l6pos=
-github.com/k1LoW/exec v0.2.0 h1:b3mOuJtNgPWpvpdW/fRz64wDS7tskW/deAslTyCL9e8=
-github.com/k1LoW/exec v0.2.0/go.mod h1:zW7HJpLP/ZndnbPrspA9Z3Q2CxHMK/PAUztlvZem+Ro=
+github.com/k1LoW/exec v0.3.0 h1:lNUqhF5IXhm2aDKcaWxhGwYC/WLcCbLOqoe97oxW1XQ=
+github.com/k1LoW/exec v0.3.0/go.mod h1:LSd4t5/1qGJHUdB2RUtoHuHfaZ3ks+BfQ+sGHzvwhnE=
 github.com/k1LoW/metr v0.10.0 h1:Mf/s4Dp7hL3HjvhhiDINS61um1UTkWY6AwOa0ZBE2W8=
 github.com/k1LoW/metr v0.10.0/go.mod h1:hplCBZynDmTv/UDzANMHB+XyhYdL3xizSy7/NgslIp0=
 github.com/kr/pretty v0.1.0/go.mod h1:dAy3ld7l9f0ibDNOQOHHMYYIIbhfbHSm3C4ZsoJORNo=
