@@ -7,7 +7,7 @@ require (
 	github.com/Songmu/prompter v0.5.1
 	github.com/antonmedv/expr v1.9.0
 	github.com/k1LoW/duration v1.2.0
-	github.com/k1LoW/exec v0.2.0
+	github.com/k1LoW/exec v0.3.0
 	github.com/k1LoW/metr v0.10.0
 	github.com/labstack/gommon v0.4.2
 	github.com/mattn/go-isatty v0.0.20
