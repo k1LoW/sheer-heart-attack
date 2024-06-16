@@ -15,7 +15,7 @@ require (
 	github.com/nicksnyder/go-i18n/v2 v2.4.0
 	github.com/shirou/gopsutil v3.21.11+incompatible
 	github.com/spf13/cast v1.6.0
-	github.com/spf13/cobra v1.8.0
+	github.com/spf13/cobra v1.8.1
 	go.uber.org/zap v1.27.0
 	golang.org/x/text v0.16.0
 )
