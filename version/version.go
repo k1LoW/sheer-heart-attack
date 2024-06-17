@@ -4,4 +4,4 @@ package version
 const Name string = "sheer-heart-attack"
 
 // Version for this
-var Version = "3.4.0"
+var Version = "3.4.1"
