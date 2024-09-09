@@ -1,5 +1,15 @@
 # Changelog
 
+## [v3.4.1](https://github.com/k1LoW/sheer-heart-attack/compare/v3.4.0...v3.4.1) - 2024-09-09
+### Other Changes
+- chore(deps): bump golang.org/x/text from 0.14.0 to 0.15.0 in the dependencies group by @dependabot in https://github.com/k1LoW/sheer-heart-attack/pull/49
+- chore(deps): bump github.com/BurntSushi/toml from 1.3.2 to 1.4.0 in the dependencies group by @dependabot in https://github.com/k1LoW/sheer-heart-attack/pull/50
+- chore(deps): bump github.com/k1LoW/exec from 0.2.0 to 0.3.0 in the dependencies group by @dependabot in https://github.com/k1LoW/sheer-heart-attack/pull/51
+- chore(deps): bump goreleaser/goreleaser-action from 5 to 6 in the dependencies group by @dependabot in https://github.com/k1LoW/sheer-heart-attack/pull/52
+- chore(deps): bump golang.org/x/text from 0.15.0 to 0.16.0 in the dependencies group by @dependabot in https://github.com/k1LoW/sheer-heart-attack/pull/53
+- chore(deps): bump github.com/spf13/cobra from 1.8.0 to 1.8.1 in the dependencies group by @dependabot in https://github.com/k1LoW/sheer-heart-attack/pull/54
+- chore(deps): bump the dependencies group across 1 directory with 2 updates by @dependabot in https://github.com/k1LoW/sheer-heart-attack/pull/56
+
 ## [v3.4.0](https://github.com/k1LoW/sheer-heart-attack/compare/v3.3.1...v3.4.0) - 2024-04-02
 ### Other Changes
 - Bump up go and pkg version by @k1LoW in https://github.com/k1LoW/sheer-heart-attack/pull/36
