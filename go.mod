@@ -1,9 +1,10 @@
 module github.com/k1LoW/sheer-heart-attack
 
 go 1.22.1
+toolchain go1.24.1
 
 require (
-	github.com/BurntSushi/toml v1.4.0
+	github.com/BurntSushi/toml v1.5.0
 	github.com/Songmu/prompter v0.5.1
 	github.com/antonmedv/expr v1.9.0
 	github.com/k1LoW/duration v1.2.0
@@ -15,9 +16,9 @@ require (
 	github.com/nicksnyder/go-i18n/v2 v2.5.1
 	github.com/shirou/gopsutil v3.21.11+incompatible
 	github.com/spf13/cast v1.7.1
-	github.com/spf13/cobra v1.9.0
+	github.com/spf13/cobra v1.9.1
 	go.uber.org/zap v1.27.0
-	golang.org/x/text v0.22.0
+	golang.org/x/text v0.23.0
 )
 
 require (
