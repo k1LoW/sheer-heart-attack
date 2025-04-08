@@ -1,6 +1,6 @@
 module github.com/k1LoW/sheer-heart-attack
 
-go 1.22.1
+go 1.23.8
 
 require (
 	github.com/BurntSushi/toml v1.4.0
