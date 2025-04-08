@@ -73,7 +73,7 @@ var trackCmd = &cobra.Command{
 	},
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if isatty.IsTerminal(os.Stdout.Fd()) && !force {
-			return fmt.Errorf("%s\n", "can not execute `track` directly. execute via `launch`, or use `--force` option")
+			return errors.New("can not execute `track` directly. execute via `launch`, or use `--force` option")
 		}
 		ctx, cancel := context.WithCancel(context.Background())
 		defer cancel()
@@ -183,7 +183,8 @@ var trackCmd = &cobra.Command{
 					l.Error(errorMessage, zap.Error(err))
 					break L
 				}
-				if got.(bool) {
+				tf, ok := got.(bool)
+				if ok && tf {
 					exceeded++
 				} else {
 					exceeded = 0
