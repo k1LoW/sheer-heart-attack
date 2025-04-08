@@ -1,3 +1,4 @@
+version: 2
 before:
   hooks:
     - go mod download
@@ -34,10 +35,6 @@ archives:
       format: zip
 checksum:
   name_template: 'checksums.txt'
-snapshot:
-  name_template: "{{ .Version }}-next"
-changelog:
-  skip: true
 nfpms:
   -
     id: killer-q-nfpms
