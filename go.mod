@@ -16,8 +16,8 @@ require (
 	github.com/shirou/gopsutil v3.21.11+incompatible
 	github.com/spf13/cast v1.10.0
 	github.com/spf13/cobra v1.10.1
-	go.uber.org/zap v1.27.0
-	golang.org/x/text v0.30.0
+	go.uber.org/zap v1.27.1
+	golang.org/x/text v0.31.0
 )
 
 require (
