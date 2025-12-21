@@ -3,7 +3,7 @@ module github.com/k1LoW/sheer-heart-attack
 go 1.24.0
 
 require (
-	github.com/BurntSushi/toml v1.5.0
+	github.com/BurntSushi/toml v1.6.0
 	github.com/Songmu/prompter v0.5.1
 	github.com/antonmedv/expr v1.9.0
 	github.com/k1LoW/duration v1.2.0
