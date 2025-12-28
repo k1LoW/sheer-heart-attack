@@ -1,6 +1,6 @@
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
-github.com/BurntSushi/toml v1.5.0 h1:W5quZX/G/csjUnuI8SUYlsHs9M38FC7znL0lIO+DvMg=
-github.com/BurntSushi/toml v1.5.0/go.mod h1:ukJfTF/6rtPPRCnwkur4qwRxa8vTRFBF0uk2lLoLwho=
+github.com/BurntSushi/toml v1.6.0 h1:dRaEfpa2VI55EwlIW72hMRHdWouJeRF7TPYhI+AUQjk=
+github.com/BurntSushi/toml v1.6.0/go.mod h1:ukJfTF/6rtPPRCnwkur4qwRxa8vTRFBF0uk2lLoLwho=
 github.com/DATA-DOG/go-sqlmock v1.3.3/go.mod h1:f/Ixk793poVmq4qj/V1dPUg2JEAKC73Q5eFN3EC/SaM=
 github.com/Songmu/prompter v0.5.1 h1:IAsttKsOZWSDw7bV1mtGn9TAmLFAjXbp9I/eYmUUogo=
 github.com/Songmu/prompter v0.5.1/go.mod h1:CS3jEPD6h9IaLaG6afrl1orTgII9+uDWuw95dr6xHSw=
@@ -37,8 +37,8 @@ github.com/jehiah/go-strftime v0.0.0-20171201141054-1d33003b3869/go.mod h1:cJ6Cj
 github.com/jonboulle/clockwork v0.1.0/go.mod h1:Ii8DK3G1RaLaWxj9trq07+26W01tbo22gdxWY5EU2bo=
 github.com/k1LoW/duration v1.2.0 h1:qq1gWtPh7YROFyerBufVP+ATR11mOOHDInrcC/Xe/6A=
 github.com/k1LoW/duration v1.2.0/go.mod h1:qUa0NptIiUl5EUsCc8wIiSaHuNjS4wmpYNMHp0l6pos=
-github.com/k1LoW/exec v0.4.0 h1:Wc01vrKXOAa1HfIRiDWcn3p2ebl2qVk+kOLqL7mYBL0=
-github.com/k1LoW/exec v0.4.0/go.mod h1:LSd4t5/1qGJHUdB2RUtoHuHfaZ3ks+BfQ+sGHzvwhnE=
+github.com/k1LoW/exec v0.5.0 h1:q5NE43dDGpUKce3ri+3wcBT5+Tu7TV572g7H/ERcgIE=
+github.com/k1LoW/exec v0.5.0/go.mod h1:Sbb874JpySFuYvWv5TirxQ5vAVrcEXbHF0RiXPXAqXA=
 github.com/k1LoW/metr v0.10.0 h1:Mf/s4Dp7hL3HjvhhiDINS61um1UTkWY6AwOa0ZBE2W8=
 github.com/k1LoW/metr v0.10.0/go.mod h1:hplCBZynDmTv/UDzANMHB+XyhYdL3xizSy7/NgslIp0=
 github.com/kr/pretty v0.1.0/go.mod h1:dAy3ld7l9f0ibDNOQOHHMYYIIbhfbHSm3C4ZsoJORNo=
