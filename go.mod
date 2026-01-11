@@ -12,12 +12,12 @@ require (
 	github.com/labstack/gommon v0.4.2
 	github.com/mattn/go-isatty v0.0.20
 	github.com/monochromegane/slack-incoming-webhooks v0.0.0-20190412004341-906fc29664ab
-	github.com/nicksnyder/go-i18n/v2 v2.6.0
+	github.com/nicksnyder/go-i18n/v2 v2.6.1
 	github.com/shirou/gopsutil v3.21.11+incompatible
 	github.com/spf13/cast v1.10.0
 	github.com/spf13/cobra v1.10.2
 	go.uber.org/zap v1.27.1
-	golang.org/x/text v0.32.0
+	golang.org/x/text v0.33.0
 )
 
 require (
