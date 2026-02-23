@@ -17,7 +17,7 @@ require (
 	github.com/spf13/cast v1.10.0
 	github.com/spf13/cobra v1.10.2
 	go.uber.org/zap v1.27.1
-	golang.org/x/text v0.33.0
+	golang.org/x/text v0.34.0
 )
 
 require (
