@@ -1,5 +1,13 @@
 # Changelog
 
+## [v3.5.2](https://github.com/k1LoW/sheer-heart-attack/compare/v3.5.1...v3.5.2) - 2026-06-21
+
+### Other Changes
+- chore(deps): bump golang.org/x/text from 0.34.0 to 0.35.0 in the dependencies group by @dependabot[bot] in https://github.com/k1LoW/sheer-heart-attack/pull/96
+- chore(deps): bump the dependencies group with 2 updates by @dependabot[bot] in https://github.com/k1LoW/sheer-heart-attack/pull/98
+- chore(deps): bump actions/checkout from 6 to 7 in the dependencies group by @dependabot[bot] in https://github.com/k1LoW/sheer-heart-attack/pull/102
+- chore(deps): bump the dependencies group across 1 directory with 4 updates by @dependabot[bot] in https://github.com/k1LoW/sheer-heart-attack/pull/101
+
 ## [v3.5.1](https://github.com/k1LoW/sheer-heart-attack/compare/v3.5.0...v3.5.1) - 2026-02-23
 ### Other Changes
 - chore(deps): bump golang.org/x/text from 0.23.0 to 0.24.0 in the dependencies group by @dependabot[bot] in https://github.com/k1LoW/sheer-heart-attack/pull/70
