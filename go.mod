@@ -4,20 +4,20 @@ go 1.26.8
 
 require (
 	github.com/BurntSushi/toml v1.6.0
-	github.com/Songmu/prompter v0.5.1
+	github.com/Songmu/prompter v1.0.0
 	github.com/antonmedv/expr v1.9.0
 	github.com/k1LoW/duration v1.2.0
 	github.com/k1LoW/exec v0.5.0
 	github.com/k1LoW/metr v0.10.0
 	github.com/labstack/gommon v0.5.0
-	github.com/mattn/go-isatty v0.0.23
+	github.com/mattn/go-isatty v0.0.24
 	github.com/monochromegane/slack-incoming-webhooks v0.0.0-20190412004341-906fc29664ab
-	github.com/nicksnyder/go-i18n/v2 v2.6.1
+	github.com/nicksnyder/go-i18n/v2 v2.7.0
 	github.com/shirou/gopsutil v3.21.11+incompatible
 	github.com/spf13/cast v1.10.0
 	github.com/spf13/cobra v1.10.2
 	go.uber.org/zap v1.28.0
-	golang.org/x/text v0.40.0
+	golang.org/x/text v0.43.0
 )
 
 require (
@@ -29,6 +29,6 @@ require (
 	github.com/tklauser/numcpus v0.6.0 // indirect
 	github.com/yusufpapurcu/wmi v1.2.2 // indirect
 	go.uber.org/multierr v1.10.0 // indirect
-	golang.org/x/sys v0.29.0 // indirect
-	golang.org/x/term v0.0.0-20220526004731-065cf7ba2467 // indirect
+	golang.org/x/sys v0.49.0 // indirect
+	golang.org/x/term v0.47.0 // indirect
 )
